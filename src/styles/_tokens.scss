@@ -1,0 +1,31 @@
+// Tokens de diseño de Planilla360. Los componentes usan estas variables, nunca colores sueltos.
+:root {
+  --color-fondo: #f4f5f7;
+  --color-superficie: #ffffff;
+  --color-borde: #e3e6eb;
+  --color-texto: #12161c;
+  --color-texto-secundario: #5b6472;
+
+  --color-menu: #0e1a19;
+  --color-menu-activo: #1b3a37;
+  --color-menu-texto: #c9d4d2;
+
+  --color-primario: #0f766e;
+  --color-primario-hover: #0b5a54;
+  --color-primario-suave: #e6f2f1;
+  --color-acento: #14b8a6;
+
+  --color-advertencia-fondo: #fef3e2;
+  --color-advertencia-texto: #8a4205;
+  --color-error-fondo: #fdecea;
+  --color-error-texto: #9b1c12;
+  --color-info-fondo: #e8f0fb;
+  --color-info-texto: #1d4e89;
+
+  --fuente-texto: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fuente-titulo: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+
+  --radio-tarjeta: 12px;
+  --radio-control: 8px;
+  --alto-control-min: 44px;
+}
