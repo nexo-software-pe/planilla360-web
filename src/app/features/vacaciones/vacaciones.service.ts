@@ -49,6 +49,30 @@ export interface VacacionPendiente {
   vencido: boolean;
 }
 
+export interface DetallePeriodo {
+  periodoId: string;
+  desde: string;
+  hasta: string;
+  diasGanados: number;
+  diasGozados: number;
+  diasVendidos: number;
+  diasReservados: number;
+  diasDisponibles: number;
+}
+
+export interface SaldoVacaciones {
+  diasDisponibles: number;
+  periodos: DetallePeriodo[];
+}
+
+export interface PermisoRequest {
+  tipo: TipoPermiso;
+  desde: string;
+  hasta: string;
+  conGoce: boolean;
+  motivo: string | null;
+}
+
 export const TIPO_PERMISO: Record<TipoPermiso, string> = {
   MEDICO: 'Médico',
   PERSONAL: 'Personal',
@@ -59,6 +83,28 @@ export const TIPO_PERMISO: Record<TipoPermiso, string> = {
 export class VacacionesService {
   private readonly http = inject(HttpClient);
   private readonly api = inject(API_URL);
+
+  miSaldo(): Observable<SaldoVacaciones> {
+    return this.http.get<SaldoVacaciones>(`${this.api}/vacaciones/saldo/mio`);
+  }
+
+  solicitar(desde: string, hasta: string): Observable<SolicitudVacaciones> {
+    return this.http.post<SolicitudVacaciones>(`${this.api}/vacaciones/solicitudes`, {
+      desde,
+      hasta,
+    });
+  }
+
+  cancelar(id: string): Observable<SolicitudVacaciones> {
+    return this.http.post<SolicitudVacaciones>(
+      `${this.api}/vacaciones/solicitudes/${id}/cancelar`,
+      {},
+    );
+  }
+
+  crearPermiso(datos: PermisoRequest): Observable<Permiso> {
+    return this.http.post<Permiso>(`${this.api}/permisos`, datos);
+  }
 
   solicitudes(estado?: EstadoSolicitud, empleadoId?: string): Observable<SolicitudVacaciones[]> {
     let params = new HttpParams();

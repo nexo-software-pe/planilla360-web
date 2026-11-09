@@ -111,6 +111,36 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'planilla',
+        canActivate: [rolGuard(...ROLES_PERSONAL)],
+        children: [
+          {
+            path: '',
+            title: 'Planilla · Planilla360',
+            loadComponent: () =>
+              import('./features/planilla/planilla-lista').then((m) => m.PlanillaLista),
+          },
+          {
+            path: ':id',
+            title: 'Planilla del mes · Planilla360',
+            loadComponent: () =>
+              import('./features/planilla/planilla-detalle').then((m) => m.PlanillaDetalle),
+          },
+        ],
+      },
+      {
+        path: 'beneficios',
+        canActivate: [rolGuard(...ROLES_PERSONAL)],
+        title: 'Gratificación y CTS · Planilla360',
+        loadComponent: () => import('./features/planilla/beneficios').then((m) => m.Beneficios),
+      },
+      {
+        path: 'reportes',
+        canActivate: [rolGuard(...ROLES_PERSONAL)],
+        title: 'Reportes · Planilla360',
+        loadComponent: () => import('./features/planilla/reportes').then((m) => m.Reportes),
+      },
+      {
         path: 'usuarios',
         canActivate: [rolGuard('ADMIN_EMPRESA')],
         title: 'Usuarios · Planilla360',
@@ -152,6 +182,30 @@ export const routes: Routes = [
         path: '',
         title: 'Mi inicio · Planilla360',
         loadComponent: () => import('./features/portal/portal-inicio').then((m) => m.PortalInicio),
+      },
+      {
+        path: 'asistencia',
+        title: 'Mi asistencia · Planilla360',
+        loadComponent: () =>
+          import('./features/portal/portal-asistencia').then((m) => m.PortalAsistencia),
+      },
+      {
+        path: 'vacaciones',
+        title: 'Mis vacaciones · Planilla360',
+        loadComponent: () =>
+          import('./features/portal/portal-vacaciones').then((m) => m.PortalVacaciones),
+      },
+      {
+        path: 'permisos',
+        title: 'Mis permisos · Planilla360',
+        loadComponent: () =>
+          import('./features/portal/portal-permisos').then((m) => m.PortalPermisos),
+      },
+      {
+        path: 'boletas',
+        title: 'Mis boletas · Planilla360',
+        loadComponent: () =>
+          import('./features/portal/portal-boletas').then((m) => m.PortalBoletas),
       },
     ],
   },

@@ -24,6 +24,11 @@ export interface ResumenMensual {
   minutosExtra: number;
 }
 
+export interface Marcacion {
+  instante: string;
+  tipo: 'ENTRADA' | 'SALIDA';
+}
+
 export type EstadoHoraExtra = 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
 
 export interface HoraExtra {
@@ -65,6 +70,17 @@ export type HorarioRequest = Omit<Horario, 'id'>;
 export class AsistenciaService {
   private readonly http = inject(HttpClient);
   private readonly api = inject(API_URL);
+
+  /** Marca la entrada o la salida de quien llama: el servidor decide cuál corresponde. */
+  marcar(): Observable<Marcacion> {
+    return this.http.post<Marcacion>(`${this.api}/asistencia/marcaciones`, {});
+  }
+
+  miAsistencia(mes: string): Observable<AsistenciaDiaria[]> {
+    return this.http.get<AsistenciaDiaria[]>(`${this.api}/asistencia/mia`, {
+      params: new HttpParams().set('mes', mes),
+    });
+  }
 
   resumen(mes: string): Observable<ResumenMensual[]> {
     return this.http.get<ResumenMensual[]>(`${this.api}/asistencia/resumen`, {

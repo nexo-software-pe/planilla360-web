@@ -8,8 +8,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\""
+    "format": "prettier --write \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" playwright.config.ts",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" playwright.config.ts",
+    "e2e": "playwright test",
+    "e2e:informe": "playwright show-report"
   },
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
@@ -25,6 +27,7 @@
     "@angular/material": "^22.2.6",
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
+    "@ngrx/signals": "^22.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -33,12 +36,15 @@
     "@angular/cli": "^22.2.6",
     "@angular/compiler-cli": "^22.2.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.0",
     "@testing-library/angular": "^19.6.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^24.19.2",
     "angular-eslint": "22.6.0",
     "eslint": "^10.12.0",
+    "exceljs": "^4.4.0",
     "jsdom": "^30.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",

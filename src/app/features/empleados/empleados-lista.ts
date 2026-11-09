@@ -138,6 +138,7 @@ import { Empleado, EmpleadosService, FiltrosEmpleados } from './empleados.servic
         (reintentar)="lista.cargar()"
       />
       <mat-paginator
+        showFirstLastButtons
         [length]="lista.datos()?.totalElementos ?? 0"
         [pageIndex]="pagina()"
         [pageSize]="tamano()"

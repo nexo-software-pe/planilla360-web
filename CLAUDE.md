@@ -4,7 +4,7 @@ Frontend de **Planilla360** (Nexo Software S.A.C.): SPA de RRHH y planillas para
 
 ## Stack
 Angular 22 (standalone components, signals, RxJS, formularios reactivos) · SCSS · Vitest · ESLint (angular-eslint) · Prettier.
-Node `^22.22.3 || ^24.15.0` (ver `engines`). Angular Material (+CDK) para controles, tematizado con nuestros tokens (ADR 0001) · Testing Library (`@testing-library/angular`) sobre Vitest. Pendiente (8b): NgRx SignalStore (planilla) y Playwright.
+Node `^22.22.3 || ^24.15.0` (ver `engines`). Angular Material (+CDK) para controles, tematizado con nuestros tokens (ADR 0001) · Testing Library (`@testing-library/angular`) sobre Vitest. NgRx SignalStore solo en la planilla (ADR 0002) · Playwright para los E2E.
 
 ## Comandos
 ```
@@ -14,6 +14,7 @@ npm run lint
 npm run format:check # npm run format para corregir
 npm test -- --watch=false
 npm run build
+npm run e2e              # Playwright contra la API real (ver README)
 ```
 
 ## Convenciones
@@ -35,9 +36,10 @@ npm run build
 - `src/app/core/http/` — `ApiError`, `errorInterceptor` (toast global), `cargaInterceptor` + `CargaService` (barra de progreso), `NotificacionService`.
 - `src/app/core/config/api-url.ts` y `src/environments/` — URL de la API por entorno.
 - `src/app/layout/` — `admin/` (menú lateral oscuro + tarjeta de empresa) y `portal/` (móvil, barra inferior); `navegacion.ts` define el menú por rol: cada feature nueva agrega su entrada ahí.
-- `src/app/features/` — una carpeta por feature: `login`, `errores`, `portal` (marcador hasta la 8b), `panel` (inicio: `panel-rrhh` y `panel-saas`), `empleados` (lista, ficha con pestañas, formulario, importación), `asistencia` (shell con pestañas: resumen, detalle, horas extra, horarios), `vacaciones` (shell: bandeja y saldos), `admin` (usuarios, áreas y cargos, auditoría; `admin.service` también sirve a `saas`), `saas` (empresas, parámetros legales), `catalogo` (áreas, cargos y AFP en memoria).
-- `src/app/shared/` — `SolesPipe`, `FechaPipe`, `EncabezadoPagina`, `Etiqueta` + `estados.ts` (estado → texto y tono), `EstadoLista` (cargando / error / vacío), `recurso()` (carga con signals), `DialogosService` (confirmar y pedir texto), `validadores.ts` (DNI, RUC, teléfono, contraseña), `fechas.ts` (siempre hora local).
+- `src/app/features/` — una carpeta por feature: `login`, `errores`, `portal` (inicio, asistencia, vacaciones, permisos y boletas del empleado), `planilla` (lista, detalle con `PlanillaStore`, gratificación y CTS, reportes), `panel` (inicio: `panel-rrhh` y `panel-saas`), `empleados` (lista, ficha con pestañas, formulario, importación), `asistencia` (shell con pestañas: resumen, detalle, horas extra, horarios), `vacaciones` (shell: bandeja y saldos), `admin` (usuarios, áreas y cargos, auditoría; `admin.service` también sirve a `saas`), `saas` (empresas, parámetros legales), `catalogo` (áreas, cargos y AFP en memoria).
+- `src/app/shared/` — `PaginadorEs` (paginador en español, se provee en los layouts), `descarga.ts`, `SolesPipe`, `FechaPipe`, `EncabezadoPagina`, `Etiqueta` + `estados.ts` (estado → texto y tono), `EstadoLista` (cargando / error / vacío), `recurso()` (carga con signals), `DialogosService` (confirmar y pedir texto), `validadores.ts` (DNI, RUC, teléfono, contraseña), `fechas.ts` (siempre hora local).
 - `src/styles/_tokens.scss` — tokens de diseño; `src/styles.scss` — tema de Material mapeado a los tokens y utilidades globales (`.tabla-caja`, `.cifra`).
+- `e2e/` — pruebas Playwright (`*.e2e.ts`, fuera de `src` y de Vitest); `utils.ts` tiene el login por rol, los tokens por API y `crearEmpleadoConUsuario`.
 - `docs/adr/` — decisiones de arquitectura del front.
 - `eslint.config.js`, `.prettierrc` — calidad de código; `.github/workflows/ci.yml` — CI.
 
@@ -45,4 +47,4 @@ npm run build
 API en perfil `local` (puerto 8080, CORS permite `http://localhost:4200`) y `npm start`. Usuarios de desarrollo: ver el README del api.
 
 ## Estado
-Fase 8a: pantallas de RRHH, ADMIN_EMPRESA y ADMIN_SAAS listas (panel, empleados, asistencia, vacaciones y permisos, usuarios, áreas y cargos, auditoría, empresas, parámetros legales). Faltan en la 8b: planilla, gratificación y CTS, boletas y reportes, portal del empleado y E2E.
+Fase 8 completa: pantallas de RRHH, ADMIN_EMPRESA y ADMIN_SAAS (8a); planilla con SignalStore, gratificación y CTS, boletas y reportes, portal del empleado y E2E (8b).

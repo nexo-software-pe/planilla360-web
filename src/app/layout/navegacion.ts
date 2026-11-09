@@ -16,6 +16,13 @@ export const NAVEGACION_ADMIN: readonly ItemNavegacion[] = [
     ruta: '/panel/vacaciones',
     roles: ['ADMIN_EMPRESA', 'RRHH'],
   },
+  { etiqueta: 'Planilla', ruta: '/panel/planilla', roles: ['ADMIN_EMPRESA', 'RRHH'] },
+  {
+    etiqueta: 'Gratificación y CTS',
+    ruta: '/panel/beneficios',
+    roles: ['ADMIN_EMPRESA', 'RRHH'],
+  },
+  { etiqueta: 'Reportes', ruta: '/panel/reportes', roles: ['ADMIN_EMPRESA', 'RRHH'] },
   { etiqueta: 'Usuarios', ruta: '/panel/usuarios', roles: ['ADMIN_EMPRESA'] },
   { etiqueta: 'Áreas y cargos', ruta: '/panel/areas-cargos', roles: ['ADMIN_EMPRESA'] },
   { etiqueta: 'Auditoría', ruta: '/panel/auditoria', roles: ['ADMIN_EMPRESA'] },
@@ -26,6 +33,10 @@ export const NAVEGACION_ADMIN: readonly ItemNavegacion[] = [
 /** Barra inferior del portal del empleado. */
 export const NAVEGACION_PORTAL: readonly ItemNavegacion[] = [
   { etiqueta: 'Inicio', ruta: '/portal', roles: ['EMPLEADO'] },
+  { etiqueta: 'Asistencia', ruta: '/portal/asistencia', roles: ['EMPLEADO'] },
+  { etiqueta: 'Vacaciones', ruta: '/portal/vacaciones', roles: ['EMPLEADO'] },
+  { etiqueta: 'Permisos', ruta: '/portal/permisos', roles: ['EMPLEADO'] },
+  { etiqueta: 'Boletas', ruta: '/portal/boletas', roles: ['EMPLEADO'] },
 ];
 
 export function itemsPara(items: readonly ItemNavegacion[], rol: Rol | null): ItemNavegacion[] {
