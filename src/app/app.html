@@ -1,5 +1,4 @@
-<main class="inicio">
-  <h1>Planilla360</h1>
-  <p>Nexo Software S.A.C.</p>
-  <router-outlet />
-</main>
+@if (cargando()) {
+  <mat-progress-bar class="carga" mode="indeterminate" aria-label="Cargando" />
+}
+<router-outlet />
