@@ -1,0 +1,38 @@
+# Actualizaciones automáticas de dependencias. Los PR van a `staging`, con commits convencionales y agrupados.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: staging
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: America/Lima
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'chore(deps)'
+    groups:
+      angular:
+        patterns: ['@angular/*', '@angular-devkit/*', '@ngrx/*', 'typescript', 'rxjs', 'zone.js', 'tslib']
+        update-types: [minor, patch]
+      calidad:
+        patterns: ['eslint*', '@eslint/*', 'angular-eslint', 'typescript-eslint', 'prettier', 'vitest', 'jsdom', '@testing-library/*', '@playwright/*']
+        update-types: [minor, patch]
+      resto:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: staging
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: America/Lima
+    commit-message:
+      prefix: 'ci(deps)'
+    groups:
+      acciones:
+        patterns: ['*']

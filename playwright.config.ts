@@ -14,10 +14,13 @@ export default defineConfig({
   // las pruebas comparten una sola base de datos: se ejecutan de a una
   workers: 1,
   fullyParallel: false,
-  retries: 0,
+  // en el CI un reintento absorbe los fallos espurios (la traza queda en el informe)
+  retries: process.env['CI'] ? 1 : 0,
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: process.env['CI']
+    ? [['list'], ['github'], ['html', { open: 'never' }]]
+    : [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: process.env['E2E_URL'] ?? 'http://localhost:4200',
     channel: canal || undefined,
