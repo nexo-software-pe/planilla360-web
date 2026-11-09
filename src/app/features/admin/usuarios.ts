@@ -176,6 +176,7 @@ const ROLES_ASIGNABLES: Rol[] = ['ADMIN_EMPRESA', 'RRHH', 'EMPLEADO'];
         (reintentar)="lista.cargar()"
       />
       <mat-paginator
+        showFirstLastButtons
         [length]="lista.datos()?.totalElementos ?? 0"
         [pageIndex]="pagina()"
         [pageSize]="tamano()"

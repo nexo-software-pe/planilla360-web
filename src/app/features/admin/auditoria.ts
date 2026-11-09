@@ -117,6 +117,7 @@ const ACCION: Record<RegistroAuditoria['accion'], { texto: string; tono: Tono }>
         (reintentar)="lista.cargar()"
       />
       <mat-paginator
+        showFirstLastButtons
         [length]="lista.datos()?.totalElementos ?? 0"
         [pageIndex]="pagina()"
         [pageSize]="tamano()"
