@@ -82,3 +82,116 @@ h3 {
   text-align: right;
   white-space: nowrap;
 }
+
+// Piezas comunes de pantalla (todas con tokens)
+.tarjeta {
+  padding: 24px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-superficie);
+}
+
+.tarjeta h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th {
+    padding: 12px 16px;
+    background: #f0f2f5;
+    color: var(--color-texto-secundario);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-borde);
+    vertical-align: middle;
+  }
+
+  th.cifra,
+  td.cifra {
+    text-align: right;
+  }
+
+  tbody tr:hover {
+    background: #fafbfc;
+  }
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.filtros mat-form-field {
+  min-width: 180px;
+}
+
+.rejilla-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0 16px;
+}
+
+.acciones-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.acciones-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.pila {
+  display: grid;
+  gap: 24px;
+}
+
+.aviso {
+  padding: 12px 16px;
+  border-radius: var(--radio-control);
+  font-size: 14px;
+}
+
+.aviso--advertencia {
+  background: var(--color-advertencia-fondo);
+  color: var(--color-advertencia-texto);
+}
+
+.aviso--error {
+  background: var(--color-error-fondo);
+  color: var(--color-error-texto);
+}
+
+.aviso--info {
+  background: var(--color-info-fondo);
+  color: var(--color-info-texto);
+}
