@@ -1,0 +1,43 @@
+<div class="admin">
+  <aside class="menu">
+    <a class="logo" routerLink="/panel" aria-label="Planilla360, ir al inicio">
+      <span class="logo__marca" aria-hidden="true">P</span>
+      <span class="logo__texto">Planilla360</span>
+    </a>
+
+    <nav aria-label="Navegación principal">
+      <ul class="menu__lista">
+        @for (item of items(); track item.ruta) {
+          <li>
+            <a
+              class="menu__item"
+              [routerLink]="item.ruta"
+              routerLinkActive="menu__item--activo"
+              [routerLinkActiveOptions]="{ exact: item.ruta === '/panel' }"
+              ariaCurrentWhenActive="page"
+              >{{ item.etiqueta }}</a
+            >
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="menu__pie">
+      @if (empresa(); as e) {
+        <div class="empresa">
+          <p class="empresa__etiqueta">Empresa activa</p>
+          <p class="empresa__nombre">{{ e.razonSocial }}</p>
+          <p class="empresa__ruc">RUC {{ e.ruc }}</p>
+        </div>
+      }
+      @if (usuario(); as u) {
+        <p class="usuario">{{ u.nombre }}</p>
+      }
+      <button type="button" class="menu__salir" (click)="salir()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <router-outlet />
+  </main>
+</div>

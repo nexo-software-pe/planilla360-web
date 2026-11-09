@@ -1,0 +1,150 @@
+.admin {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.menu {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100vh;
+  padding: 20px 16px;
+  background: var(--color-menu);
+  color: var(--color-menu-texto);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--fuente-titulo);
+  font-size: 20px;
+  font-weight: 700;
+
+  &__marca {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radio-control);
+    background: var(--color-acento);
+    color: var(--color-menu);
+  }
+}
+
+.menu__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu__item {
+  display: flex;
+  align-items: center;
+  min-height: var(--alto-control-min);
+  padding: 0 12px;
+  border-radius: var(--radio-control);
+  color: var(--color-menu-texto);
+  text-decoration: none;
+
+  &:hover,
+  &--activo {
+    background: var(--color-menu-activo);
+    color: #fff;
+  }
+}
+
+.menu__pie {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.empresa {
+  padding: 12px;
+  border-radius: var(--radio-control);
+  background: var(--color-menu-activo);
+
+  p {
+    margin: 0;
+  }
+
+  &__etiqueta {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  &__nombre {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  &__ruc {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.usuario {
+  margin: 0;
+  font-size: 14px;
+}
+
+.menu__salir {
+  min-height: var(--alto-control-min);
+  border: 1px solid var(--color-menu-activo);
+  border-radius: var(--radio-control);
+  background: transparent;
+  color: var(--color-menu-texto);
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-menu-activo);
+    color: #fff;
+  }
+}
+
+.contenido {
+  min-width: 0;
+  padding: 32px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .admin {
+    grid-template-columns: 1fr;
+  }
+
+  .menu {
+    position: static;
+    height: auto;
+    gap: 12px;
+  }
+
+  .menu__lista {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .menu__pie {
+    margin-top: 0;
+  }
+
+  .contenido {
+    padding: 16px;
+  }
+}

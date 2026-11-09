@@ -1,24 +1,19 @@
+import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { TestBed } from '@angular/core/testing';
+import { render, screen } from '@testing-library/angular';
 import { App } from './app';
+import { CargaService } from './core/http/carga.service';
 
 describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-      providers: [provideRouter([])],
-    }).compileComponents();
+  it('no muestra el indicador de carga sin peticiones', async () => {
+    await render(App, { providers: [provideRouter([])] });
+    expect(screen.queryByRole('progressbar', { name: 'Cargando' })).not.toBeInTheDocument();
   });
 
-  it('crea la aplicación', () => {
-    const fixture = TestBed.createComponent(App);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
-  it('muestra el nombre del producto', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Planilla360');
+  it('muestra el indicador global mientras hay peticiones en curso', async () => {
+    await render(App, {
+      providers: [provideRouter([]), { provide: CargaService, useValue: { activa: signal(true) } }],
+    });
+    expect(screen.getByRole('progressbar', { name: 'Cargando' })).toBeInTheDocument();
   });
 });
