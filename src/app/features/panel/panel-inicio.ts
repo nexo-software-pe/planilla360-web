@@ -1,38 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AuthService } from '../../core/auth/auth.service';
-import { EncabezadoPagina } from '../../shared/encabezado-pagina';
+import { PanelRrhh } from './panel-rrhh';
+import { PanelSaas } from './panel-saas';
 
+/** Inicio de administración: la plataforma ve sus empresas; RRHH y admin de empresa, el personal. */
 @Component({
   selector: 'app-panel-inicio',
-  imports: [EncabezadoPagina],
+  imports: [PanelRrhh, PanelSaas],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-encabezado-pagina
-      titulo="Panel"
-      [subtitulo]="'Bienvenido, ' + (usuario()?.nombre ?? '')"
-    />
-    <section class="tarjeta">
-      <h2>Estamos preparando tu panel</h2>
-      <p>Aquí verás el resumen de personal, asistencia y planilla del mes.</p>
-    </section>
-  `,
-  styles: `
-    .tarjeta {
-      padding: 24px;
-      border: 1px solid var(--color-borde);
-      border-radius: var(--radio-tarjeta);
-      background: var(--color-superficie);
-    }
-    h2 {
-      margin: 0 0 8px;
-      font-size: 20px;
-    }
-    p {
-      margin: 0;
-      color: var(--color-texto-secundario);
+    @if (rol() === 'ADMIN_SAAS') {
+      <app-panel-saas />
+    } @else {
+      <app-panel-rrhh />
     }
   `,
 })
 export class PanelInicio {
-  protected readonly usuario = inject(AuthService).usuario;
+  protected readonly rol = inject(AuthService).rol;
 }

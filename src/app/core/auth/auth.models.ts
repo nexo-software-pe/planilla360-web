@@ -33,6 +33,9 @@ export interface Perfil {
 
 export const ROLES_ADMINISTRACION: readonly Rol[] = ['ADMIN_SAAS', 'ADMIN_EMPRESA', 'RRHH'];
 
+/** Roles que gestionan al personal de una empresa (empleados, asistencia, vacaciones). */
+export const ROLES_PERSONAL: readonly Rol[] = ['ADMIN_EMPRESA', 'RRHH'];
+
 /** Pantalla de entrada según el rol: administración (`/panel`) o portal del empleado. */
 export function rutaInicialPara(rol: Rol | null): string {
   if (rol === null) return '/login';
