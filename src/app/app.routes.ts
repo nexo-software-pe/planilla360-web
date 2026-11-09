@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { ROLES_ADMINISTRACION, rutaInicialPara } from './core/auth/auth.models';
+import { ROLES_ADMINISTRACION, ROLES_PERSONAL, rutaInicialPara } from './core/auth/auth.models';
 import { AuthService } from './core/auth/auth.service';
 import { authGuard, invitadoGuard, rolGuard } from './core/auth/guards';
 
@@ -22,6 +22,124 @@ export const routes: Routes = [
         path: '',
         title: 'Panel · Planilla360',
         loadComponent: () => import('./features/panel/panel-inicio').then((m) => m.PanelInicio),
+      },
+      {
+        path: 'empleados',
+        canActivate: [rolGuard(...ROLES_PERSONAL)],
+        children: [
+          {
+            path: '',
+            title: 'Empleados · Planilla360',
+            loadComponent: () =>
+              import('./features/empleados/empleados-lista').then((m) => m.EmpleadosLista),
+          },
+          {
+            path: 'nuevo',
+            title: 'Nuevo empleado · Planilla360',
+            loadComponent: () =>
+              import('./features/empleados/empleado-form').then((m) => m.EmpleadoForm),
+          },
+          {
+            path: 'importar',
+            title: 'Importar empleados · Planilla360',
+            loadComponent: () =>
+              import('./features/empleados/empleados-importar').then((m) => m.EmpleadosImportar),
+          },
+          {
+            path: ':id',
+            title: 'Ficha del empleado · Planilla360',
+            loadComponent: () =>
+              import('./features/empleados/empleado-ficha').then((m) => m.EmpleadoFicha),
+          },
+          {
+            path: ':id/editar',
+            title: 'Editar empleado · Planilla360',
+            loadComponent: () =>
+              import('./features/empleados/empleado-form').then((m) => m.EmpleadoForm),
+          },
+        ],
+      },
+      {
+        path: 'asistencia',
+        canActivate: [rolGuard(...ROLES_PERSONAL)],
+        loadComponent: () =>
+          import('./features/asistencia/asistencia-shell').then((m) => m.AsistenciaShell),
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'resumen' },
+          {
+            path: 'resumen',
+            title: 'Resumen de asistencia · Planilla360',
+            loadComponent: () =>
+              import('./features/asistencia/asistencia-resumen').then((m) => m.AsistenciaResumen),
+          },
+          {
+            path: 'detalle',
+            title: 'Detalle de asistencia · Planilla360',
+            loadComponent: () =>
+              import('./features/asistencia/asistencia-detalle').then((m) => m.AsistenciaDetalle),
+          },
+          {
+            path: 'horas-extra',
+            title: 'Horas extra · Planilla360',
+            loadComponent: () =>
+              import('./features/asistencia/horas-extra').then((m) => m.HorasExtra),
+          },
+          {
+            path: 'horarios',
+            title: 'Horarios · Planilla360',
+            loadComponent: () => import('./features/asistencia/horarios').then((m) => m.Horarios),
+          },
+        ],
+      },
+      {
+        path: 'vacaciones',
+        canActivate: [rolGuard(...ROLES_PERSONAL)],
+        loadComponent: () =>
+          import('./features/vacaciones/vacaciones-shell').then((m) => m.VacacionesShell),
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'bandeja' },
+          {
+            path: 'bandeja',
+            title: 'Bandeja de aprobación · Planilla360',
+            loadComponent: () => import('./features/vacaciones/bandeja').then((m) => m.Bandeja),
+          },
+          {
+            path: 'saldos',
+            title: 'Saldos de vacaciones · Planilla360',
+            loadComponent: () => import('./features/vacaciones/saldos').then((m) => m.Saldos),
+          },
+        ],
+      },
+      {
+        path: 'usuarios',
+        canActivate: [rolGuard('ADMIN_EMPRESA')],
+        title: 'Usuarios · Planilla360',
+        loadComponent: () => import('./features/admin/usuarios').then((m) => m.Usuarios),
+      },
+      {
+        path: 'areas-cargos',
+        canActivate: [rolGuard('ADMIN_EMPRESA')],
+        title: 'Áreas y cargos · Planilla360',
+        loadComponent: () => import('./features/admin/areas-cargos').then((m) => m.AreasCargos),
+      },
+      {
+        path: 'auditoria',
+        canActivate: [rolGuard('ADMIN_EMPRESA')],
+        title: 'Auditoría · Planilla360',
+        loadComponent: () => import('./features/admin/auditoria').then((m) => m.Auditoria),
+      },
+      {
+        path: 'empresas',
+        canActivate: [rolGuard('ADMIN_SAAS')],
+        title: 'Empresas · Planilla360',
+        loadComponent: () => import('./features/saas/empresas').then((m) => m.Empresas),
+      },
+      {
+        path: 'parametros-legales',
+        canActivate: [rolGuard('ADMIN_SAAS')],
+        title: 'Parámetros legales · Planilla360',
+        loadComponent: () =>
+          import('./features/saas/parametros-legales').then((m) => m.ParametrosLegales),
       },
     ],
   },
