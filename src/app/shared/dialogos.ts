@@ -39,7 +39,7 @@ export interface DatosDialogoConfirmar {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 mat-dialog-title>{{ datos.titulo }}</h2>
-    <form (ngSubmit)="aceptar()">
+    <form (submit)="$event.preventDefault(); aceptar()">
       <mat-dialog-content>
         <mat-form-field appearance="outline" class="completo">
           <mat-label>{{ datos.etiqueta }}</mat-label>
