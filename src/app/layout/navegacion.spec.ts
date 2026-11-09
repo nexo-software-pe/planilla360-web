@@ -10,6 +10,9 @@ describe('menú de administración por rol', () => {
       'Empleados',
       'Asistencia',
       'Vacaciones y permisos',
+      'Planilla',
+      'Gratificación y CTS',
+      'Reportes',
     ]);
   });
 
