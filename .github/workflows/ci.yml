@@ -5,6 +5,8 @@ on:
     branches: [staging, main]
   push:
     branches: [staging, main]
+  # Permite lanzar a mano los E2E (y el resto) sobre cualquier rama desde la pestaña Actions.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,10 +26,16 @@ jobs:
         run: npm run lint
       - name: Formato (Prettier)
         run: npm run format:check
-      - name: Tests
-        run: npm test -- --watch=false
+      - name: Tests (con cobertura para SonarCloud)
+        run: npm test -- --watch=false --coverage --coverage-reporters=lcov
       - name: Build
         run: npm run build
+      - name: Guardar la cobertura para el análisis
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura
+          path: coverage/planilla360-web/lcov.info
+          retention-days: 3
 
   secrets:
     name: Escaneo de secretos
@@ -40,3 +48,146 @@ jobs:
         run: |
           curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz | tar -xz gitleaks
           ./gitleaks detect --source . --redact --verbose
+
+  sonar:
+    name: SonarCloud
+    needs: build
+    # Dependabot no recibe los secretos de la organización; sus PR no se analizan.
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: cobertura
+          path: coverage
+      - name: Análisis y quality gate
+        uses: SonarSource/sonarqube-scan-action@e805d875275f728fac1885b413934be6d7c63f65 # v8.4.1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.organization=nexo-software-pe
+            -Dsonar.projectKey=nexo-software-pe_planilla360-web
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.exclusions=**/*.spec.ts,**/*.testing.ts
+            -Dsonar.coverage.exclusions=**/*.spec.ts,**/*.testing.ts,src/test-setup.ts
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.qualitygate.wait=true
+
+  dependencias:
+    name: Dependencias (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy (vulnerabilidades en package-lock.json)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scanners: vuln
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
+          format: table
+
+  # ADR 0003: E2E de Playwright contra la API real (rama `staging` del api) con PostgreSQL, RabbitMQ,
+  # MinIO, Mailpit y WireMock. Informa pero no bloquea (no es un check obligatorio).
+  e2e:
+    name: E2E (Playwright)
+    if: github.event_name != 'pull_request' || github.base_ref == 'staging'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # La API y las pruebas asumen la hora de Lima, igual que en el equipo de desarrollo.
+      TZ: America/Lima
+      E2E_CANAL: ''
+      CI: 'true'
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: planilla360
+          POSTGRES_USER: planilla360
+          POSTGRES_PASSWORD: planilla360
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U planilla360 -d planilla360" --health-interval 5s --health-timeout 3s --health-retries 10
+      rabbitmq:
+        image: rabbitmq:3.13-alpine
+        env:
+          RABBITMQ_DEFAULT_USER: planilla360
+          RABBITMQ_DEFAULT_PASS: planilla360
+        ports: ['5672:5672']
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping" --health-interval 10s --health-timeout 5s --health-retries 10
+      mailpit:
+        image: axllent/mailpit:v1.24
+        ports: ['1025:1025']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Código del api (rama staging)
+        uses: actions/checkout@v4
+        with:
+          repository: nexo-software-pe/planilla360-api
+          ref: staging
+          path: api
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: api/pom.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.15.0'
+          cache: npm
+
+      # MinIO y WireMock necesitan argumentos de arranque (o archivos del api) que un service container
+      # no puede recibir: se levantan con docker run.
+      - name: MinIO y WireMock
+        run: |
+          docker run -d --name minio -p 9000:9000             -e MINIO_ROOT_USER=planilla360 -e MINIO_ROOT_PASSWORD=planilla360-local             cgr.dev/chainguard/minio@sha256:a1ac4589a5f8136b616e667b48a0bea9719bb10bd45799ea946f24bbedfafde4             server /data
+          docker run -d --name wiremock -p 8099:8080 -v "$PWD/api/docker/wiremock:/home/wiremock:ro"             wiremock/wiremock:3.13.2 --global-response-templating --disable-gzip
+
+      - name: Compilar y arrancar la API (perfil local, con datos ficticios)
+        working-directory: api
+        run: |
+          ./mvnw -B -ntp -q package -DskipTests -Dcheckstyle.skip -Dspotless.check.skip -Djacoco.skip=true
+          nohup java -jar target/planilla360-api-*.jar > "$RUNNER_TEMP/api.log" 2>&1 &
+          for i in $(seq 1 90); do
+            if curl -fs http://localhost:8080/actuator/health/readiness > /dev/null; then echo "API lista"; exit 0; fi
+            sleep 4
+          done
+          echo "::error::La API no quedó lista a tiempo"; tail -n 80 "$RUNNER_TEMP/api.log"; exit 1
+
+      - run: npm ci
+      - name: Navegador de Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Servir el front
+        run: |
+          nohup npm start -- --host 127.0.0.1 > "$RUNNER_TEMP/front.log" 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fs http://localhost:4200 > /dev/null; then echo "Front listo"; exit 0; fi
+            sleep 3
+          done
+          echo "::error::El front no quedó listo a tiempo"; tail -n 40 "$RUNNER_TEMP/front.log"; exit 1
+      - name: E2E
+        run: npm run e2e
+
+      - name: Informe, trazas y registros
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-informe
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
+      - name: Registro de la API
+        if: failure()
+        run: tail -n 200 "$RUNNER_TEMP/api.log"

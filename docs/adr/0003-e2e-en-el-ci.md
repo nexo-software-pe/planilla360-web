@@ -1,6 +1,6 @@
 # ADR 0003 — Pruebas E2E en el CI
 
-Estado: propuesta (se implementa en la Fase 9)
+Estado: aceptada e implementada (Fase 9)
 
 ## Contexto
 Las pruebas Playwright (ADR 0002) recorren los flujos de cada rol contra la **API real** y hoy solo se ejecutan en local: necesitan PostgreSQL, RabbitMQ y MinIO, y la API corriendo con el seed. Mientras no estén en el CI, un cambio que rompa un flujo (en el front o en el contrato de la API) solo se detecta si alguien las corre a mano. En la 8b encontraron un error real que las pruebas unitarias no veían (un diálogo que recargaba la página).
@@ -28,3 +28,10 @@ Las pruebas Playwright (ADR 0002) recorren los flujos de cada rol contra la **AP
 - Un cambio incompatible en la API detiene los E2E del front: es la señal buscada, y complementa al check de contrato OpenAPI del repo del api.
 - Hay que fijar la versión de la rama del api contra la que se prueba (`staging`) y decidir qué pasa cuando los dos repos cambian a la vez.
 - Los E2E del repo del api podrían dispararse también desde allí contra el front de `staging`; queda como mejora posterior.
+
+## Resultado de la implementación (Fase 9)
+- **Tiempo medido:** el job completo tarda entre 4,5 y 5,5 minutos (compilar la API, arrancarla con el seed, instalar Chromium y 34 pruebas), por debajo de la referencia de 10 minutos: **se queda en cada PR hacia `staging`**, sin job nocturno. Se puede lanzar a mano con `workflow_dispatch`.
+- **Desvío del plan:** PostgreSQL, RabbitMQ y Mailpit son *service containers*; MinIO y WireMock se levantan con `docker run` en un paso, porque necesitan argumentos de arranque o archivos del repo del api que un service container no puede recibir.
+- **El front se sirve con `npm start`** (servidor de desarrollo) contra la API en `localhost:8080`; no se prueba el build de producción.
+- **Primera corrida:** destapó una prueba que solo pasaba con una base con uso previo (esperaba varias páginas de usuarios). Una base limpia, como la del CI, es justo lo que estas pruebas deben soportar.
+- **Sigue sin ser check obligatorio**: hay que observar unas semanas de fallos espurios.
