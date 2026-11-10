@@ -49,8 +49,10 @@ test.describe('ADMIN_EMPRESA', () => {
     await page.getByLabel('Contraseña inicial').fill(`Clave${s}2026x`);
     await page.getByRole('button', { name: 'Crear usuario' }).click();
     await esperarToast(page, 'Usuario creado.');
-    // la lista está ordenada por nombre y paginada: el usuario nuevo queda en la última página
-    await page.getByRole('button', { name: 'Última página' }).click();
+    // la lista está ordenada por nombre y paginada: con varias páginas (base con uso previo) el
+    // usuario nuevo queda en la última; en una base limpia hay una sola y el botón está deshabilitado
+    const ultimaPagina = page.getByRole('button', { name: 'Última página' });
+    if (await ultimaPagina.isEnabled()) await ultimaPagina.click();
     await expect(page.getByRole('row', { name: new RegExp(nombre) })).toContainText(
       'Recursos Humanos',
     );
