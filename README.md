@@ -28,7 +28,7 @@ Angular 22 (componentes standalone, signals) · Angular Material · NgRx Signals
 3. Abre http://localhost:4200 e inicia sesión con un usuario de desarrollo.
 
 ### Usuarios de desarrollo (solo entorno local)
-Los usuarios y la contraseña común de desarrollo (admin de plataforma, admin de empresa, RRHH y empleado) están en la sección «Usuarios de desarrollo» del [README de la API](https://github.com/nexo-software-pe/planilla360-api#usuarios-de-desarrollo-solo-perfil-local). Existen únicamente con el perfil `local` de la API y datos ficticios. Cada rol aterriza en su pantalla: RRHH y admin en el panel, el empleado en el portal, el admin de plataforma en la consola SaaS.
+Los usuarios y la contraseña común de desarrollo (admin de plataforma, admin de empresa, RRHH y empleado) están en la sección «Usuarios de desarrollo» del [README de la API](https://github.com/nexo-software-pe/planilla360-api#usuarios-de-desarrollo-solo-perfil-local). Existen únicamente con el perfil `local` de la API y datos ficticios. Cada rol aterriza en su pantalla: RRHH y admin en el panel, el empleado en el portal, el admin de plataforma en el panel (`/panel`), con la vista de plataforma.
 
 ## URL de la API
 El front obtiene la URL base del token `API_URL` (`src/app/core/config/api-url.ts`), que toma el valor de `src/environments/`:
@@ -41,6 +41,8 @@ El front obtiene la URL base del token `API_URL` (`src/app/core/config/api-url.t
 Para apuntar a otra API en desarrollo, cambia `apiUrl` en `environment.ts` (no lo subas al repo). Las pruebas unitarias reemplazan el token `API_URL` con un valor propio. La API debe permitir el origen http://localhost:4200 por CORS (el perfil `local` ya lo hace).
 
 ## Scripts
+> Los comandos de este README usan sintaxis de Git Bash. En Windows PowerShell o pwsh las variables de entorno se asignan antes: `$env:E2E_CANAL="chromium"; npm run e2e`. Ojo: en PowerShell asignar una cadena vacía (`$env:E2E_CANAL=""`) elimina la variable, y entonces se usaría el Chrome instalado; por eso aquí se pide el canal `chromium` explícitamente. Para volver al Chrome: `Remove-Item Env:E2E_CANAL`.
+
 | Comando | Qué hace |
 |---|---|
 | `npm start` | Servidor de desarrollo en http://localhost:4200 con recarga (`ng serve`) |
@@ -78,7 +80,7 @@ npm run e2e:informe               # informe HTML de la última corrida
 - `e2e/fixtures/plantilla-empleados-ejemplo.xlsx` es la plantilla de importación con dos filas de ejemplo.
 
 ### Límite de intentos de login
-La API limita el login (por defecto 30 por IP y 5 por usuario, por minuto). La suite entra siempre desde la misma IP, por lo que en un equipo rápido puede ver «Superaste el límite de intentos». Las pruebas ya inician sesión por la pantalla una sola vez por usuario y luego retoman esa sesión. Si aun así lo encuentras, espera un minuto y repite; no subas timeouts ni cambies los valores por defecto de la API.
+La API limita el login (por defecto 30 por IP y 5 por correo desde la misma IP, por minuto). La suite entra siempre desde la misma IP, por lo que en un equipo rápido puede ver «Superaste el límite de intentos». Las pruebas ya inician sesión por la pantalla una sola vez por usuario y luego retoman esa sesión. Si aun así lo encuentras, espera un minuto y repite; no subas timeouts ni cambies los valores por defecto de la API.
 
 En el CI (job «E2E (Playwright)» de `.github/workflows/ci.yml`) la API es efímera: se compila la rama `staging` del repo de la API, se arranca con el perfil `local` junto a PostgreSQL, RabbitMQ, MinIO, Mailpit y WireMock, y se relajan los límites solo en ese proceso con las variables `APP_SECURITY_RATE_LIMIT_IP_POR_MINUTO` y `APP_SECURITY_RATE_LIMIT_LOGIN_POR_MINUTO`. Ese job informa pero no bloquea el merge. Más contexto en [docs/adr/0003-e2e-en-el-ci.md](docs/adr/0003-e2e-en-el-ci.md).
 
