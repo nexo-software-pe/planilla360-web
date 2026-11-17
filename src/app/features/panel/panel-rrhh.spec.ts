@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { render, screen, within } from '@testing-library/angular';
+import userEvent from '@testing-library/user-event';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { ApiError } from '../../core/http/api-error';
@@ -33,10 +34,13 @@ const base: IndicadoresRrhh = {
   cumpleanos: [],
 };
 
-async function abrir(datos: Partial<IndicadoresRrhh> = {}) {
+async function abrir(
+  datos: Partial<IndicadoresRrhh> = {},
+  indicadoresRrhh = vi.fn(() => of({ ...base, ...datos })),
+) {
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date(2026, 10, 16, 12));
-  const panel = { indicadoresRrhh: vi.fn(() => of({ ...base, ...datos })) };
+  const panel = { indicadoresRrhh };
   await render(PanelRrhh, {
     providers: [
       provideRouter([]),
@@ -139,22 +143,15 @@ describe('Panel de RRHH', () => {
   });
 
   it('muestra el error y permite reintentar', async () => {
-    vi.useFakeTimers({ toFake: ['Date'] });
-    const panel = {
-      indicadoresRrhh: vi
+    const panel = await abrir(
+      {},
+      vi
         .fn()
         .mockReturnValueOnce(throwError(() => new ApiError(500, 'Error', 'Falló el servidor')))
         .mockReturnValue(of(base)),
-    };
-    await render(PanelRrhh, {
-      providers: [
-        provideRouter([]),
-        { provide: PanelService, useValue: panel },
-        { provide: AuthService, useValue: { usuario: signal({ nombre: 'Rosa' }) } },
-      ],
-    });
+    );
     expect(await screen.findByRole('alert')).toHaveTextContent('Falló el servidor');
-    screen.getByRole('button', { name: 'Reintentar' }).click();
+    await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
     expect(await screen.findByText('Personal activo')).toBeInTheDocument();
     expect(panel.indicadoresRrhh).toHaveBeenCalledTimes(2);
   });

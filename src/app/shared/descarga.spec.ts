@@ -3,14 +3,12 @@ import { descargarBlob } from './descarga';
 describe('descargarBlob', () => {
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.unstubAllGlobals();
   });
 
   it('entrega el archivo con el nombre indicado y libera la URL temporal', () => {
     const blob = new Blob(['contenido']);
-    const crear = vi.fn(() => 'blob:archivo');
-    const revocar = vi.fn();
-    vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: crear, revokeObjectURL: revocar }));
+    const crear = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:archivo');
+    const revocar = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
     const entregas: { descarga: string; destino: string }[] = [];
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
       this: HTMLAnchorElement,

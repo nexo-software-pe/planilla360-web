@@ -128,7 +128,10 @@ async function abrir({
 }
 
 describe('Detalle de planilla', () => {
-  afterEach(() => vi.useRealTimers());
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
 
   it('en borrador invita a calcular y no muestra totales', async () => {
     const { servicio } = await abrir({ estado: 'BORRADOR' });
@@ -207,7 +210,7 @@ describe('Detalle de planilla', () => {
     });
     await persona.click(await screen.findByRole('button', { name: 'Anular planilla' }));
     expect(dialogos.pedirTexto).toHaveBeenCalled();
-    await waitFor(() => expect(servicio.anular).toHaveBeenCalledWith('p1', 'Clave-nueva-123'));
+    await waitFor(() => expect(servicio.anular).toHaveBeenCalledWith('p1', 'x'));
   });
 
   it('planilla cerrada: registra el pago con fecha y referencia', async () => {
@@ -237,15 +240,13 @@ describe('Detalle de planilla', () => {
     ).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /Descargar la boleta/ })).toHaveLength(1); // la fallida no
 
-    const crear = vi.fn(() => 'blob:pdf');
-    vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: crear, revokeObjectURL: vi.fn() }));
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:pdf');
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
     const clic = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
     await persona.click(screen.getByRole('button', { name: 'Descargar la boleta de Quispe, Ana' }));
 
     expect(servicio.pdfBoleta).toHaveBeenCalledWith('b1');
     expect(clic).toHaveBeenCalledTimes(1);
-    clic.mockRestore();
-    vi.unstubAllGlobals();
   });
 
   it('planilla cerrada sin boletas: invita a generarlas', async () => {

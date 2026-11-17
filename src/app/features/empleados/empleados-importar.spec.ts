@@ -39,11 +39,12 @@ async function abrir(respuesta: ResultadoImportacion = simulacion) {
 const excel = (nombre = 'empleados.xlsx', bytes = 10) => new File([new Uint8Array(bytes)], nombre);
 
 describe('Importar empleados', () => {
+  afterEach(() => vi.restoreAllMocks());
+
   it('descarga la plantilla con el nombre esperado', async () => {
     const { servicio, persona } = await abrir();
-    const crear = vi.fn(() => 'blob:plantilla');
-    const revocar = vi.fn();
-    vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: crear, revokeObjectURL: revocar }));
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:plantilla');
+    const revocar = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
     const clic = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
 
     await persona.click(screen.getByRole('button', { name: 'Descargar plantilla' }));
@@ -51,8 +52,6 @@ describe('Importar empleados', () => {
     expect(servicio.plantillaImportacion).toHaveBeenCalled();
     expect(clic).toHaveBeenCalledTimes(1);
     expect(revocar).toHaveBeenCalledWith('blob:plantilla');
-    clic.mockRestore();
-    vi.unstubAllGlobals();
   });
 
   it('no se puede validar sin elegir un archivo', async () => {

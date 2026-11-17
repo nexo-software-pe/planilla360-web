@@ -66,13 +66,13 @@ describe('Usuarios', () => {
     await persona.click(await screen.findByRole('button', { name: 'Nuevo usuario' }));
     await persona.type(screen.getByRole('textbox', { name: /Nombre/ }), ' Nuevo ');
     await persona.type(screen.getByRole('textbox', { name: /Correo/ }), 'nuevo@empresa.pe');
-    await persona.type(screen.getByLabelText(/Contraseña inicial/), 'Clave-segura-1234');
+    await persona.type(screen.getByLabelText(/Contraseña inicial/), 'aaaaaaaaaa1');
     await persona.click(screen.getByRole('button', { name: 'Crear usuario' }));
 
     expect(admin.crearUsuario).toHaveBeenCalledWith({
       nombre: 'Nuevo',
       email: 'nuevo@empresa.pe',
-      password: 'Clave-segura-1234',
+      password: 'aaaaaaaaaa1',
       rol: 'RRHH',
       empleadoId: null,
     });
@@ -120,7 +120,7 @@ describe('Usuarios', () => {
     await persona.click(
       await screen.findByRole('button', { name: 'Restablecer contraseña de Rosa' }),
     );
-    expect(admin.restablecerPassword).toHaveBeenCalledWith('u1', 'Clave-nueva-123');
+    expect(admin.restablecerPassword).toHaveBeenCalledWith('u1', 'x');
     expect(avisos.exito).toHaveBeenCalledWith('Contraseña restablecida.');
   });
 });

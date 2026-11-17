@@ -68,6 +68,23 @@ describe('CatalogoService (memoria)', () => {
     http.verify();
   });
 
+  it('vuelve a leer las áreas tras crear o actualizar una', () => {
+    const { servicio, http } = montarServicio(CatalogoService);
+    servicio.areas().subscribe();
+    http.expectOne(`${API_PRUEBA}/areas?size=200`).flush(pagina([]));
+
+    servicio.crearArea('Ventas').subscribe();
+    http.expectOne({ method: 'POST', url: `${API_PRUEBA}/areas` }).flush({ id: 'a1' });
+    servicio.areas().subscribe();
+    http.expectOne(`${API_PRUEBA}/areas?size=200`).flush(pagina([{ id: 'a1', nombre: 'Ventas' }]));
+
+    servicio.actualizarArea('a1', 'Comercial').subscribe();
+    http.expectOne({ method: 'PUT', url: `${API_PRUEBA}/areas/a1` }).flush({ id: 'a1' });
+    servicio.areas().subscribe();
+    http.expectOne(`${API_PRUEBA}/areas?size=200`).flush(pagina([]));
+    http.verify();
+  });
+
   it('lee los cargos una sola vez y vuelve a leer tras modificar', () => {
     const { servicio, http } = montarServicio(CatalogoService);
     servicio.cargos().subscribe();

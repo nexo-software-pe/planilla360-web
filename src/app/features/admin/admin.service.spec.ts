@@ -38,10 +38,10 @@ probarPeticiones(AdminService, [
   },
   {
     nombre: 'restablece la contraseña',
-    llamar: (s) => s.restablecerPassword('u1', 'Nueva-123'),
+    llamar: (s) => s.restablecerPassword('u1', 'x'),
     metodo: 'POST',
     ruta: '/usuarios/u1/reset-password',
-    cuerpo: { passwordNueva: 'Nueva-123' },
+    cuerpo: { passwordNueva: 'x' },
   },
   {
     nombre: 'consulta la auditoría sin enviar filtros vacíos',

@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { render, screen } from '@testing-library/angular';
+import { render, screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { of } from 'rxjs';
 import { proveedoresTransversales } from '../../shared/pruebas.testing';
@@ -94,7 +94,10 @@ describe('Áreas y cargos', () => {
     await usuario.click(screen.getByRole('combobox', { name: /Área/ }));
     await usuario.click(await screen.findByRole('option', { name: 'Ventas' }));
     await usuario.type(screen.getByRole('spinbutton', { name: /Sueldo referencial/ }), '4200');
-    await usuario.click(screen.getAllByRole('button', { name: 'Guardar' })[0]);
+    const seccionCargos = within(
+      screen.getByRole('heading', { name: 'Cargos' }).closest('section')!,
+    );
+    await usuario.click(seccionCargos.getByRole('button', { name: 'Guardar' }));
 
     expect(catalogo.crearCargo).toHaveBeenCalledWith({
       nombre: 'Jefe',

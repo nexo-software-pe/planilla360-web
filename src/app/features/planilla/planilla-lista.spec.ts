@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import { render, screen } from '@testing-library/angular';
+import { fireEvent, render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { of } from 'rxjs';
 import { Planilla, PlanillaService } from './planilla.service';
@@ -85,10 +85,7 @@ describe('Lista de planillas', () => {
     const { servicio, persona } = await abrir([]);
     await persona.click(screen.getByRole('button', { name: 'Nueva planilla' }));
     const campo = screen.getAllByLabelText(/Periodo/)[0];
-    await persona.clear(campo);
-    campo.setAttribute('value', '2027-01');
-    (campo as HTMLInputElement).value = '2027-01';
-    campo.dispatchEvent(new Event('input'));
+    fireEvent.input(campo, { target: { value: '2027-01' } });
     await persona.click(screen.getByRole('button', { name: 'Crear planilla' }));
 
     expect(servicio.crear).not.toHaveBeenCalled();

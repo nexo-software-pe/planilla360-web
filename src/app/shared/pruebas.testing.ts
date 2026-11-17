@@ -3,7 +3,7 @@ import { NotificacionService } from '../core/http/notificacion.service';
 import { DialogosService } from './dialogos';
 
 /** Dobles de las dependencias transversales de las pantallas (diálogos y avisos). */
-export function dobleDialogos(texto = 'Clave-nueva-123') {
+export function dobleDialogos(texto = 'x') {
   return {
     confirmar: vi.fn(() => of(true)),
     pedirTexto: vi.fn(() => of(texto)),
