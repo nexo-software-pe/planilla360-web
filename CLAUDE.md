@@ -26,6 +26,7 @@ npm run e2e              # Playwright contra la API real (ver README)
 - Pantallas de datos: servicio por feature (HTTP) + componente que usa `recurso()` y `<app-estado-lista>`; tablas con `class="tabla"` dentro de `.tabla-caja`, estados con `<app-etiqueta>`, fechas con `fecha`, montos con `soles`. Errores 400 con `errores[]` se pintan en el campo (`setErrors({ servidor })`).
 - Menú por rol: `layout/navegacion.ts`; cada ruta de `panel` lleva su `rolGuard`. Los roles de personal (`ROLES_PERSONAL`) son RRHH y ADMIN_EMPRESA.
 - Pruebas: Testing Library (`render`, `screen`, consultas por rol/etiqueta; no por clases CSS). Utilidades de prueba en `*.testing.ts` (fuera del build).
+- Pruebas de servicios HTTP: `probarPeticiones` de `shared/servicio.testing.ts` (tabla de casos con método, URL y cuerpo). Dobles de `DialogosService` y `NotificacionService`: `shared/pruebas.testing.ts`.
 - HTTP: nunca `HttpClient` con URL a mano; usar `API_URL`. Los errores llegan como `ApiError`; una petición que maneja su error en pantalla usa el contexto `OMITIR_TOAST`.
 - Commits: Conventional Commits. Ramas `feat/<n>-...`, `fix/<n>-...`, PR a `staging`.
 - **Ningún secreto en el repo**.
