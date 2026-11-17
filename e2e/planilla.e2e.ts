@@ -1,4 +1,4 @@
-import { APIRequestContext, expect, test } from '@playwright/test';
+import { APIRequestContext, Page, expect, test } from '@playwright/test';
 import { API, USUARIOS, iniciarSesion, tokenApi } from './utils';
 
 interface PlanillaApi {
@@ -22,6 +22,20 @@ async function buscarPlanilla(
   );
 }
 
+// El formulario de alta convive con el filtro de la lista, que también tiene un campo "Periodo":
+// se espera a que el formulario exista y se rellena solo su campo, nunca el del filtro.
+async function crearPlanilla(page: Page, periodo: string): Promise<void> {
+  await page.goto('/panel/planilla');
+  await page.getByRole('button', { name: 'Nueva planilla' }).click();
+  await expect(page.getByRole('heading', { name: 'Nueva planilla mensual' })).toBeVisible();
+  const formulario = page.locator('form', {
+    has: page.getByRole('heading', { name: 'Nueva planilla mensual' }),
+  });
+  await formulario.getByLabel('Periodo').fill(periodo);
+  await formulario.getByRole('button', { name: 'Crear planilla' }).click();
+  await expect(page).toHaveURL(/\/panel\/planilla\/[\w-]+$/);
+}
+
 const mesDeHoy = () =>
   new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' }).slice(0, 7);
 
@@ -41,11 +55,7 @@ test.describe('Planilla (RRHH)', () => {
     if (existente) {
       await page.goto(`/panel/planilla/${existente.id}`);
     } else {
-      await page.goto('/panel/planilla');
-      await page.getByRole('button', { name: 'Nueva planilla' }).click();
-      await page.getByLabel('Periodo').first().fill(periodo);
-      await page.getByRole('button', { name: 'Crear planilla' }).click();
-      await expect(page).toHaveURL(/\/panel\/planilla\/[\w-]+$/);
+      await crearPlanilla(page, periodo);
     }
 
     // creada en borrador: se calcula y aparecen las líneas y los totales
@@ -80,11 +90,7 @@ test.describe('Planilla (RRHH)', () => {
     if (existente && existente.estado !== 'CERRADA') {
       await page.goto(`/panel/planilla/${existente.id}`);
     } else {
-      await page.goto('/panel/planilla');
-      await page.getByRole('button', { name: 'Nueva planilla' }).click();
-      await page.getByLabel('Periodo').first().fill(mes);
-      await page.getByRole('button', { name: 'Crear planilla' }).click();
-      await expect(page).toHaveURL(/\/panel\/planilla\/[\w-]+$/);
+      await crearPlanilla(page, mes);
     }
 
     await page.getByRole('button', { name: /Calcular planilla|Recalcular/ }).click();
