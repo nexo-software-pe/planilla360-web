@@ -182,12 +182,8 @@ export class Beneficios {
     const hoy = mesActual();
     const anio = Number(hoy.slice(0, 4));
     const candidatos = [anio, anio - 1].flatMap((a) => MESES_VALIDOS[tipo].map((m) => `${a}-${m}`));
-    return (
-      candidatos
-        .filter((c) => c <= hoy)
-        .sort()
-        .reverse()[0] ?? hoy
-    );
+    // el año anterior siempre aporta un mes válido, así que hay al menos un candidato <= hoy
+    return candidatos.reduce((mejor, c) => (c <= hoy && c > mejor ? c : mejor), '');
   }
 
   protected nombre(id: string): string {
