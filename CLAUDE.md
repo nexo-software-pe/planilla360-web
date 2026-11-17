@@ -42,7 +42,7 @@ npm run e2e              # Playwright contra la API real (ver README)
 - `src/styles/_tokens.scss` — tokens de diseño; `src/styles.scss` — tema de Material mapeado a los tokens y utilidades globales (`.tabla-caja`, `.cifra`).
 - `e2e/` — pruebas Playwright (`*.e2e.ts`, fuera de `src` y de Vitest); `utils.ts` tiene el login por rol, los tokens por API y `crearEmpleadoConUsuario`.
 - `docs/adr/` — decisiones de arquitectura del front.
-- `eslint.config.js`, `.prettierrc` — calidad de código; `.github/workflows/ci.yml` — CI.
+- `vitest-base.config.mts` — límites de Vitest (timeouts y workers) que usa `npm test`; `eslint.config.js`, `.prettierrc` — calidad de código; `.github/workflows/ci.yml` — CI.
 
 ## Probar contra la API local
 API en perfil `local` (puerto 8080, CORS permite `http://localhost:4200`) y `npm start`. Usuarios de desarrollo: ver el README del api.
