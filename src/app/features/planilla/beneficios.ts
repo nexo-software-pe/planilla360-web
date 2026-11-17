@@ -185,8 +185,7 @@ export class Beneficios {
     return (
       candidatos
         .filter((c) => c <= hoy)
-        .sort()
-        .reverse()[0] ?? hoy
+        .sort((a, b) => b.localeCompare(a))[0] ?? hoy
     );
   }
 
