@@ -182,11 +182,7 @@ export class Beneficios {
     const hoy = mesActual();
     const anio = Number(hoy.slice(0, 4));
     const candidatos = [anio, anio - 1].flatMap((a) => MESES_VALIDOS[tipo].map((m) => `${a}-${m}`));
-    return (
-      candidatos
-        .filter((c) => c <= hoy)
-        .sort((a, b) => b.localeCompare(a))[0] ?? hoy
-    );
+    return candidatos.filter((c) => c <= hoy).sort((a, b) => b.localeCompare(a))[0] ?? hoy;
   }
 
   protected nombre(id: string): string {
