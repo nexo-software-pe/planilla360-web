@@ -108,6 +108,11 @@ jobs:
       TZ: America/Lima
       E2E_CANAL: ''
       CI: 'true'
+      # Toda la suite entra desde 127.0.0.1: el límite de login por IP del api (30/min por defecto) se
+      # supera cuando el runner va rápido y el login vuelve a /login con «Superaste el límite de intentos».
+      # Solo se relaja en este api efímero de pruebas; el valor por defecto del api no cambia.
+      APP_SECURITY_RATE_LIMIT_IP_POR_MINUTO: '1000'
+      APP_SECURITY_RATE_LIMIT_LOGIN_POR_MINUTO: '1000'
     services:
       postgres:
         image: postgres:16-alpine
