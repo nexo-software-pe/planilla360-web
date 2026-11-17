@@ -41,7 +41,7 @@ El front obtiene la URL base del token `API_URL` (`src/app/core/config/api-url.t
 Para apuntar a otra API en desarrollo, cambia `apiUrl` en `environment.ts` (no lo subas al repo). Las pruebas unitarias reemplazan el token `API_URL` con un valor propio. La API debe permitir el origen http://localhost:4200 por CORS (el perfil `local` ya lo hace).
 
 ## Scripts
-> Los comandos de este README usan sintaxis de Git Bash. En PowerShell las variables de entorno se asignan antes: `$env:E2E_CANAL="chromium"; npm run e2e`. Ojo: en PowerShell asignar una cadena vacía (`$env:E2E_CANAL=""`) elimina la variable, y entonces se usaría el Chrome instalado; por eso aquí se pide el canal `chromium` explícitamente. Para volver al Chrome: `Remove-Item Env:E2E_CANAL`.
+> Los comandos de este README usan sintaxis de Git Bash. En Windows PowerShell o pwsh las variables de entorno se asignan antes: `$env:E2E_CANAL="chromium"; npm run e2e`. Ojo: en PowerShell asignar una cadena vacía (`$env:E2E_CANAL=""`) elimina la variable, y entonces se usaría el Chrome instalado; por eso aquí se pide el canal `chromium` explícitamente. Para volver al Chrome: `Remove-Item Env:E2E_CANAL`.
 
 | Comando | Qué hace |
 |---|---|

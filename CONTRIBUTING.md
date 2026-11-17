@@ -4,7 +4,7 @@ Gracias por aportar a **planilla360-web**. Esta guía explica el flujo de trabaj
 
 ## Flujo de trabajo
 1. **Issue.** Toma un issue (usa las plantillas de historia de usuario o reporte de error) y muévelo a *In progress* en el tablero.
-2. **Rama** desde `staging` actualizado (`git switch staging && git pull`). Nombre: `<tipo>/<n>-<slug>`, con tipo `feat`, `fix`, `chore`, `docs`, `test` o `ci`. Ejemplos: `feat/41-export-excel`, `fix/23-saldo-vacaciones`, `docs/12-guia-contribucion`.
+2. **Rama** desde `staging` actualizado (`git switch staging && git pull`). Nombre: `<tipo>/<n>-<slug>`, con tipo `feat`, `fix`, `refactor`, `chore`, `docs`, `test` o `ci`. Ejemplos: `feat/41-export-excel`, `fix/23-saldo-vacaciones`, `docs/12-guia-contribucion`.
 3. **Commits pequeños** con Conventional Commits (ver abajo).
 4. **Pull request a `staging`** con la [plantilla](.github/pull_request_template.md) completa. Un PR = un cambio pequeño y revisable. No hagas push directo a `staging` ni a `main`.
 5. **Release:** un PR `staging` → `main`.
@@ -78,17 +78,17 @@ Son **informativos** (no bloquean el merge, pero conviene revisarlos): SonarClou
 - El análisis de la rama `staging` mide el código «nuevo» frente a `main`, así que puede fallar aunque cada PR pase. Revisa el CI del push tras cada merge.
 
 ### Dependabot
-[Dependabot](.github/dependabot.yml) abre cada lunes PR agrupados hacia `staging` para npm y GitHub Actions, con prefijo `chore(deps)`. Se revisan como cualquier PR: CI en verde y, en una actualización mayor, lee las notas de versión antes de aprobar.
+[Dependabot](.github/dependabot.yml) abre cada lunes PR hacia `staging`: para npm con prefijo `chore(deps)` y para GitHub Actions con prefijo `ci(deps)`. En npm las actualizaciones menores y de parche se agrupan (Angular y NgRx, herramientas de calidad y el resto); las versiones mayores **no** se agrupan y llegan en un PR aparte. Las acciones de GitHub se agrupan en un solo PR. Se revisan como cualquier PR: CI en verde y, en una actualización mayor, lee las notas de versión antes de aprobar. SonarCloud no analiza los PR de Dependabot (el job se omite para ese autor), así que su ausencia en esos PR no es un fallo.
 
 ## Revisión de PR
 - Quien revisa comprueba el criterio de aceptación, que las pruebas tengan sentido, la Definition of Done y que la plantilla esté completa.
 - Los comentarios se resuelven en la misma rama con commits nuevos; evita reescribir el historial publicado.
-- Nadie hace merge de su propio cambio sin revisión previa.
+- Convención del equipo: nadie hace merge de su propio cambio sin revisión previa. GitHub no lo obliga (la protección de las ramas no exige aprobaciones), así que depende de nosotros.
 
 ## Seguridad
 - **Nunca** subas secretos, contraseñas ni datos reales de personas: ni en el código, ni en pruebas, ni en commits, ni en capturas, ni en issues.
 - Los usuarios de desarrollo son ficticios y existen solo en el perfil `local` de la API.
-- Decisiones sobre la sesión: [ADR 0001](docs/adr/0001-componentes-y-sesion.md) (el refresh token vive en `localStorage`).
+- Decisiones sobre la sesión: [ADR 0001](docs/adr/0001-componentes-y-sesion.md) (el refresh token vive en `localStorage`). En la práctica: no uses `innerHTML` ni otras vías de HTML sin sanear, porque el riesgo asumido es un XSS que lea ese token.
 
 ## Definition of Done
 Un cambio está terminado cuando cumple todo lo siguiente (la plantilla de PR repite esta lista):
@@ -100,7 +100,7 @@ Un cambio está terminado cuando cumple todo lo siguiente (la plantilla de PR re
 - [ ] Accesibilidad básica: label por campo, botones reales, `aria-label` en botones solo-ícono, contraste AA.
 - [ ] Colores y tipografías desde los tokens de diseño; montos con `SolesPipe`.
 - [ ] Estados vacío, carga y error resueltos con `<app-estado-lista>` donde hay datos remotos.
-- [ ] PR revisado por otra persona.
+- [ ] PR revisado por otra persona (convención del equipo; GitHub no exige aprobaciones).
 - [ ] CI verde: **Build y tests** y **Escaneo de secretos** (obligatorios); revisados los informativos (SonarCloud, Trivy, E2E, CodeQL).
 - [ ] Documentación actualizada, y `CLAUDE.md` si cambia el mapa del proyecto.
 - [ ] Sin secretos ni datos reales; commits siguiendo Conventional Commits.
