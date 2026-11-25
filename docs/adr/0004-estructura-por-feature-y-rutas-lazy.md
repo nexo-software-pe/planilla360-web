@@ -1,12 +1,12 @@
 # ADR 0004 — Estructura por feature, rutas lazy y guards por rol
 
-Estado: aceptada e implementada (Fase 10, 2026-11-24)
+Estado: aceptada e implementada (Fase 7; registrada en la Fase 10)
 
 ## Contexto
 La aplicación sirve a cuatro roles (`ADMIN_SAAS`, `ADMIN_EMPRESA`, `RRHH`, `EMPLEADO`) con pantallas muy distintas: un panel de administración y un portal móvil para el empleado. Cargar todo en un solo paquete haría que un empleado descargue el código de planilla y administración que nunca verá, y repartir las reglas de acceso entre componentes dificultaría saber quién puede entrar adónde.
 
 ## Decisión
-1. **Una carpeta por feature en `src/app/features/`** (`empleados`, `asistencia`, `vacaciones`, `planilla`, `admin`, `saas`, `portal`, `login`, `errores`…), con sus componentes y su servicio HTTP. Lo transversal vive en `core/` (auth, http, config) y `shared/` (pipes, diálogos, utilidades); los marcos de pantalla, en `layout/`.
+1. **Una carpeta por feature en `src/app/features/`** (`panel`, `empleados`, `asistencia`, `vacaciones`, `planilla`, `admin`, `saas`, `portal`, `catalogo`, `login`, `errores`), con sus componentes y, si la tiene, su servicio HTTP (`login` y `errores` no lo necesitan). Lo transversal vive en `core/` (auth, http, config) y `shared/` (pipes, diálogos, utilidades); los marcos de pantalla, en `layout/`.
 2. **Todas las rutas se cargan en diferido** en `src/app/app.routes.ts`: `loadComponent` con `import()` para cada pantalla y layout. Los grupos con hijas (`panel`, `portal`, `empleados`, `asistencia`, `vacaciones`, `planilla`) cuelgan sus pantallas como `children`, con un componente _shell_ cuando hay navegación interna (`asistencia-shell`, `vacaciones-shell`). Cada ruta con pantalla lleva `title` con el sufijo « · Planilla360».
 3. **El acceso se decide con guards funcionales** de `core/auth/guards.ts`: `authGuard` (exige sesión y recuerda `returnUrl`), `rolGuard(...roles)` (si el rol no está permitido, redirige a `/acceso-denegado`) e `invitadoGuard` (el login manda a quien ya inició sesión a su pantalla de inicio). `panel` combina `authGuard` con `rolGuard(...ROLES_ADMINISTRACION)`, `portal` con `rolGuard('EMPLEADO')`, y cada sección se restringe además con `ROLES_PERSONAL` (`ADMIN_EMPRESA`, `RRHH`), `rolGuard('ADMIN_EMPRESA')` o `rolGuard('ADMIN_SAAS')`. Las constantes de roles están en `core/auth/auth.models.ts`, junto a `rutaInicialPara(rol)`.
 4. **El menú sale de datos por rol**: `layout/navegacion.ts` define `NAVEGACION_ADMIN` y `NAVEGACION_PORTAL` como listas de `{ etiqueta, ruta, roles }`, y `itemsPara(items, rol)` filtra lo que cada rol ve. Los layouts lo consumen con un `computed`.

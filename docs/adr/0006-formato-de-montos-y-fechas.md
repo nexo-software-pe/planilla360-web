@@ -1,12 +1,12 @@
 # ADR 0006 — Formato de montos y fechas
 
-Estado: aceptada e implementada (Fase 10, 2026-11-24)
+Estado: aceptada e implementada (Fase 7; registrada en la Fase 10)
 
 ## Contexto
 Planilla360 muestra dinero (sueldos, descuentos, neto) y fechas (periodos, asistencias, vencimientos) en casi todas las pantallas. Un formato inconsistente en una boleta (`3022.8`, `S/3,022.80`, `2026-11-09`) resta confianza, y las fechas tienen un riesgo propio: `Date.toISOString()` convierte a UTC, y en Perú (UTC-5) una hora de la noche cae en el día siguiente.
 
 ## Decisión
-1. **Montos solo con `SolesPipe`** (`shared/soles.pipe.ts`, `| soles`): formato peruano `S/ 3 022,80` (espacio como separador de miles, coma decimal, dos decimales). Acepta número o cadena y devuelve cadena vacía si el valor es nulo, vacío o no finito. Es el único lugar donde se formatea dinero.
+1. **Montos solo con `SolesPipe`** (`shared/soles.pipe.ts`, `| soles`): formato de la interfaz (convención del proyecto) `S/ 3 022,80` (espacio como separador de miles, coma decimal, dos decimales). Acepta número o cadena y devuelve cadena vacía si el valor es nulo, vacío o no finito. Es el único lugar donde se formatea dinero.
 2. **Fechas con `FechaPipe`** (`| fecha`, `dd/MM/yyyy`) y las funciones de `shared/fechas.ts`: `formatearFecha`, `formatearFechaHora` (`dd/MM/yyyy HH:mm`), `nombreDeMes` (`noviembre de 2026`) y `formatearMinutos` (`1 h 05 min`).
 3. **Fechas siempre en hora local**: `aIso`, `hoyIso` y `mesActual` (`yyyy-MM`) arman la cadena con `getFullYear`/`getMonth`/`getDate`; **nunca `toISOString`**. `formatearFecha` toma la parte `yyyy-MM-dd` de la cadena sin crear un `Date`, para no correr el día por la zona horaria.
 4. **No se formatea a mano** dinero ni fechas de negocio en plantillas o componentes: ni `toFixed` para soles, ni concatenaciones de `dd/mm/yyyy`.
