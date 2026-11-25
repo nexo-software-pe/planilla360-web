@@ -1,4 +1,4 @@
-// Producción: URL relativa; el despliegue (Fase 9) decide el proxy o el dominio.
+// URL relativa de la API en el build de producción.
 export const environment = {
   apiUrl: '/api/v1',
 };
