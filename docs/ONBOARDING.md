@@ -116,8 +116,8 @@ Formato: síntoma, causa, cómo diagnosticarlo, solución. Los comandos se proba
 
   La última columna de la línea `LISTENING` es el PID. Qué verás según el caso:
 
-  - Otro `ng serve` de este proyecto: `TCP [::1]:4200 [::]:0 LISTENING 40028`. El puerto queda ocupado y un segundo `npm start` falla (o pregunta, si la terminal es interactiva).
-  - Otro programa en todas las interfaces: `TCP 0.0.0.0:4200 0.0.0.0:0 LISTENING 45172`. Si además hay una línea `TCP [::]:4200 [::]:0 LISTENING` con el mismo PID, el puerto también está tomado en IPv6 y `npm start` falla con el error de arriba; si solo aparece la línea de `0.0.0.0`, `npm start` arranca igual con el aviso de «wildcard».
+  - Otro `ng serve` de este proyecto: `TCP [::1]:4200 [::]:0 LISTENING <pid>`. El puerto queda ocupado y un segundo `npm start` falla (o pregunta, si la terminal es interactiva).
+  - Otro programa en todas las interfaces: `TCP 0.0.0.0:4200 0.0.0.0:0 LISTENING <pid>`. Si además hay una línea `TCP [::]:4200 [::]:0 LISTENING` con el mismo PID, el puerto también está tomado en IPv6 y `npm start` falla con el error de arriba; si solo aparece la línea de `0.0.0.0`, `npm start` arranca igual con el aviso de «wildcard».
 
 - **Solución:** cierra el proceso (si es tuyo y sabes qué es):
   ```bash
@@ -185,7 +185,7 @@ Formato: síntoma, causa, cómo diagnosticarlo, solución. Los comandos se proba
 - **Causa:** red lenta o inestable, un proxy corporativo o un antivirus que revisa cada archivo de `node_modules` (son miles).
 - **Diagnóstico:** `npm ping` comprueba que el registro responde; `npm ci --loglevel verbose` muestra en qué paquete se queda.
 - **Solución:** reintenta; cambia de red si puedes; excluye la carpeta del proyecto del análisis en vivo del antivirus; si quedó a medias, borra `node_modules` y repite `npm ci`. Con proxy, pide a TI los valores para `npm config set proxy` y `https-proxy`. No uses `npm install` para «arreglarlo»: puede modificar `package-lock.json`.
-- **Avisos que no son errores:** al terminar, `npm ci` puede imprimir `N vulnerabilities` (por ejemplo, `11 moderate severity vulnerabilities`) con `To address issues that do not require attention, run: npm audit fix`, además de líneas `npm warn deprecated ...`. Son avisos informativos de `npm audit`: `npm ci` termina con código de salida 0 y puedes continuar; no ejecutes `npm audit fix` por tu cuenta, porque modificaría `package-lock.json`. Lo mismo vale para `npm warn EBADENGINE Unsupported engine`: aparece solo si tu Node no es el del proyecto (probado con Node 24.11.0), la instalación igualmente termina con código 0, pero los comandos del CLI se negarán a correr; corrige la versión según el [problema 2](#2-node-con-la-versión-equivocada). Con la versión correcta (24.15.0) no sale ningún EBADENGINE.
+- **Avisos que no son errores:** al terminar, `npm ci` puede imprimir `N vulnerabilities` (el número y la gravedad varían con el tiempo) y, en dos líneas, `To address issues that do not require attention, run:` seguida de `npm audit fix`, además de líneas `npm warn deprecated ...`. Son avisos informativos de `npm audit`: `npm ci` termina con código de salida 0 y puedes continuar; no ejecutes `npm audit fix` por tu cuenta, porque modificaría `package-lock.json`. Lo mismo vale para `npm warn EBADENGINE Unsupported engine`: aparece solo si tu Node no es el del proyecto (probado con Node 24.11.0), la instalación igualmente termina con código 0, pero los comandos del CLI se negarán a correr; corrige la versión según el [problema 2](#2-node-con-la-versión-equivocada). Con la versión correcta (24.15.0) no sale ningún EBADENGINE.
 
 ---
 
