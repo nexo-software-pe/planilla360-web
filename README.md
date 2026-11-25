@@ -28,7 +28,7 @@ Angular 22 (componentes standalone, signals) · Angular Material · NgRx Signals
 3. Abre http://localhost:4200 e inicia sesión con un usuario de desarrollo.
 
 ### Usuarios de desarrollo (solo entorno local)
-Los usuarios y la contraseña común de desarrollo (admin de plataforma, admin de empresa, RRHH y empleado) están en la sección «Usuarios de desarrollo» del [README de la API](https://github.com/nexo-software-pe/planilla360-api#usuarios-de-desarrollo-solo-perfil-local). Existen únicamente con el perfil `local` de la API y datos ficticios. Cada rol aterriza en su pantalla: RRHH y admin en el panel, el empleado en el portal, el admin de plataforma en el panel (`/panel`), con la vista de plataforma.
+Los usuarios y la contraseña común de desarrollo (admin de plataforma, admin de empresa, RRHH y empleado) están en la sección «Usuarios de desarrollo» del [README de la API](https://github.com/nexo-software-pe/planilla360-api/blob/staging/README.md#usuarios-de-desarrollo-solo-perfil-local). Existen únicamente con el perfil `local` de la API y datos ficticios. Cada rol aterriza en su pantalla: RRHH y admin en el panel, el empleado en el portal, el admin de plataforma en el panel (`/panel`), con la vista de plataforma.
 
 ## URL de la API
 El front obtiene la URL base del token `API_URL` (`src/app/core/config/api-url.ts`), que toma el valor de `src/environments/`:
@@ -47,7 +47,7 @@ Para apuntar a otra API en desarrollo, cambia `apiUrl` en `environment.ts` (no l
 |---|---|
 | `npm start` | Servidor de desarrollo en http://localhost:4200 con recarga (`ng serve`) |
 | `npm run lint` | ESLint (angular-eslint) sobre el proyecto (`ng lint`) |
-| `npm run format` | Da formato con Prettier a `src`, `e2e` y `playwright.config.ts` |
+| `npm run format` | Da formato con Prettier a `src`, `e2e`, `playwright.config.ts` y `vitest-base.config.mts` |
 | `npm run format:check` | Comprueba el formato sin modificar nada (lo exige el CI) |
 | `npm test -- --watch=false` | Pruebas unitarias con Vitest, una sola pasada (`ng test`); sin `--watch=false` queda en modo vigilancia |
 | `npm test -- --watch=false --coverage` | Igual, con cobertura (informe en `coverage/`) |
@@ -107,5 +107,6 @@ El detalle está en [CONTRIBUTING.md](CONTRIBUTING.md#definition-of-done).
 |---|---|
 | [CLAUDE.md](CLAUDE.md) | convenciones, mapa «dónde vive qué» y estado del proyecto |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | flujo de ramas y PR, convenciones y Definition of Done |
+| [docs/ONBOARDING.md](docs/ONBOARDING.md) | primer día, recorrido del código y problemas frecuentes |
 | [docs/adr/](docs/adr/) | decisiones de arquitectura (componentes y sesión, SignalStore y E2E, E2E en el CI) |
-| [README de la API](https://github.com/nexo-software-pe/planilla360-api#readme) | cómo levantar el backend y usuarios de desarrollo |
+| [README de la API](https://github.com/nexo-software-pe/planilla360-api/blob/staging/README.md) | cómo levantar el backend y usuarios de desarrollo |

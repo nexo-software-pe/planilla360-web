@@ -8,8 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "format": "prettier --write \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" playwright.config.ts",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" playwright.config.ts",
+    "format": "prettier --write \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" playwright.config.ts vitest-base.config.mts",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" playwright.config.ts vitest-base.config.mts",
     "e2e": "playwright test",
     "e2e:informe": "playwright show-report"
   },
