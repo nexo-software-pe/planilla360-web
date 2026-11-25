@@ -30,7 +30,7 @@ Usa `npm ci` (instala exactamente lo que fija `package-lock.json`), no `npm inst
 
 ### 1.3 Levanta la API local
 
-El front sin API no tiene login ni datos. Clona `planilla360-api` y sigue su [README](https://github.com/nexo-software-pe/planilla360-api#readme) (secciones «Requisitos» e «Inicio rápido»). Cuando esté lista, esto responde:
+El front sin API no tiene login ni datos. Clona `planilla360-api` y sigue su [README](https://github.com/nexo-software-pe/planilla360-api/blob/staging/README.md) (secciones «Requisitos» e «Inicio rápido»). Cuando esté lista, esto responde:
 
 ```bash
 curl http://localhost:8080/actuator/health
@@ -42,7 +42,7 @@ curl http://localhost:8080/actuator/health
 npm start        # ng serve en http://localhost:4200
 ```
 
-Abre http://localhost:4200. Los usuarios y la contraseña común de desarrollo están en la sección «Usuarios de desarrollo» del [README de la API](https://github.com/nexo-software-pe/planilla360-api#usuarios-de-desarrollo-solo-perfil-local); son datos ficticios que solo existen en el perfil `local`. Entra con cada rol (RRHH, empleado, admin) para ver las tres caras de la app: el panel de administración, el portal del empleado (pensado para celular) y la vista de plataforma.
+Abre http://localhost:4200. Los usuarios y la contraseña común de desarrollo están en la sección «Usuarios de desarrollo» del [README de la API](https://github.com/nexo-software-pe/planilla360-api/blob/staging/README.md#usuarios-de-desarrollo-solo-perfil-local); son datos ficticios que solo existen en el perfil `local`. Entra con cada rol (RRHH, empleado, admin) para ver las tres caras de la app: el panel de administración, el portal del empleado (pensado para celular) y la vista de plataforma.
 
 ### 1.5 Comprueba que todo está sano
 
@@ -116,7 +116,7 @@ Formato: síntoma, causa, cómo diagnosticarlo, solución. Los comandos se proba
   ```bash
   taskkill //PID <pid> //F
   ```
-  En Git Bash las opciones llevan barra doble (`//PID`, `//F`); en PowerShell o cmd, simple (`/PID`, `/F`). Tras cerrarlo, `netstat` ya no muestra la línea. Alternativa: `npm start -- --port 4300` (el flag `--port` existe en `ng serve`; por defecto 4200). Ojo: la API local solo permite por CORS el origen `http://localhost:4200` ([problema 4](#4-la-api-no-responde-o-error-de-cors)), así que con otro puerto el login fallará salvo que cambies `CORS_ALLOWED_ORIGINS` en la API. Lo normal es liberar el 4200.
+  En Git Bash las opciones llevan barra doble (`//PID`, `//F`); en PowerShell o cmd, simple (`/PID`, `/F`). Tras cerrarlo, `netstat` ya no muestra la línea. Alternativa: `npm start -- --port 4300` (el flag `--port` existe en `ng serve`; por defecto 4200). Ojo: la API local solo permite por CORS el origen `http://localhost:4200` ([problema 4](#4-la-api-no-responde-o-error-de-cors)), así que con otro puerto el login fallará salvo que cambies la variable `CORS_ALLOWED_ORIGINS` de la API (está en su `.env.example` y en `src/main/resources/application-local.yml`, donde por defecto vale `http://localhost:4200`). Lo normal es liberar el 4200.
 
 ### 2. Node con la versión equivocada
 
@@ -145,7 +145,7 @@ Formato: síntoma, causa, cómo diagnosticarlo, solución. Los comandos se proba
 - **Síntoma:** en la pestaña **Red** del navegador las peticiones van a una URL rara, como `http://localhost:8080/api/v1//empleados` (barra doble), `http://localhost:8080/api/v1empleados` (sin barra) o a `localhost:4200/api/v1/...` (el propio front). Resultado típico: 404 en las pantallas de datos.
 - **Causa:** `apiUrl` mal escrita en `src/environments/environment.ts`. Los servicios arman `${this.api}/ruta`, así que `apiUrl` **no** debe terminar en `/`. Un servicio que escribió la URL a mano, saltándose `API_URL`, produce el mismo efecto.
 - **Diagnóstico:** abre la pestaña **Red** (F12), filtra por «Fetch/XHR» y mira la URL completa de la petición fallida. Compárala con `src/environments/environment.ts` y `src/app/core/config/api-url.ts`. Busca URLs a mano con `grep -rn "http://localhost" src/app`.
-- **Solución:** deja `apiUrl: 'http://localhost:8080/api/v1'` (sin barra final) y no subas al repo un cambio hecho solo para una prueba (`git diff src/environments`). En un servicio, usa siempre `inject(API_URL)`. Reinicia `npm start` tras cambiar el entorno.
+- **Solución:** deja `apiUrl: 'http://localhost:8080/api/v1'` (sin barra final) y no subas al repo un cambio hecho solo para una prueba (`git diff src/environments`). En un servicio, usa siempre `inject(API_URL)`.
 
 ### 4. La API no responde o error de CORS
 
@@ -156,7 +156,7 @@ Formato: síntoma, causa, cómo diagnosticarlo, solución. Los comandos se proba
   curl http://localhost:8080/actuator/health
   ```
   Con la API apagada, curl responde `curl: (7) Failed to connect to localhost port 8080 ... Could not connect to server`. Encendida, devuelve el estado de salud en JSON. Comprueba además que la barra de direcciones dice exactamente `http://localhost:4200`.
-- **Solución:** enciende Docker Desktop, levanta la API siguiendo su README y espera a que `actuator/health` responda. Abre el front en `http://localhost:4200`. Si necesitas otro origen, es la API la que debe permitirlo (`CORS_ALLOWED_ORIGINS`, ver su README); no se arregla en el front.
+- **Solución:** enciende Docker Desktop, levanta la API siguiendo su README y espera a que `actuator/health` responda. Abre el front en `http://localhost:4200`. Si necesitas otro origen, es la API la que debe permitirlo (variable `CORS_ALLOWED_ORIGINS`, en `.env.example` y `src/main/resources/application-local.yml` del repo de la API); no se arregla en el front.
 
 ### 5. `npm test` falla por tiempo agotado en una máquina cargada
 
@@ -167,8 +167,8 @@ Formato: síntoma, causa, cómo diagnosticarlo, solución. Los comandos se proba
 
 ### 6. «Superaste el límite de intentos» en los E2E o con muchos logins seguidos
 
-- **Síntoma:** el login o un E2E muestra «Superaste el límite de intentos. Reintenta en N segundos.» (respuesta 429), o la sesión vuelve a `/login`.
-- **Causa:** la API limita el login: por defecto **30 por IP y 5 por correo por minuto**. Una suite E2E sale toda de la misma IP y, en un equipo rápido, lo supera.
+- **Síntoma:** el login o un E2E muestra «Superaste el límite de intentos. Reintenta en N segundos.» (respuesta 429).
+- **Causa:** la API limita el login: por defecto **30 por IP y 5 por correo desde la misma IP, por minuto**. Una suite E2E sale toda de la misma IP y, en un equipo rápido, lo supera.
 - **Diagnóstico:** pestaña **Red**: la respuesta del login es 429. Cuenta cuántos logins hiciste en el último minuto.
 - **Solución:** espera un minuto y repite. No subas timeouts ni cambies los valores por defecto de la API. Detalle en el README, sección «Límite de intentos de login».
 
