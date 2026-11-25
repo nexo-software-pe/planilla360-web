@@ -41,7 +41,7 @@ npm run e2e              # Playwright contra la API real (ver README)
 - `src/app/shared/` — `PaginadorEs` (paginador en español, se provee en los layouts), `descarga.ts`, `SolesPipe`, `FechaPipe`, `EncabezadoPagina`, `Etiqueta` + `estados.ts` (estado → texto y tono), `EstadoLista` (cargando / error / vacío), `recurso()` (carga con signals), `DialogosService` (confirmar y pedir texto), `validadores.ts` (DNI, RUC, teléfono, contraseña), `fechas.ts` (siempre hora local).
 - `src/styles/_tokens.scss` — tokens de diseño; `src/styles.scss` — tema de Material mapeado a los tokens y utilidades globales (`.tabla-caja`, `.cifra`).
 - `e2e/` — pruebas Playwright (`*.e2e.ts`, fuera de `src` y de Vitest); `utils.ts` tiene el login por rol, los tokens por API y `crearEmpleadoConUsuario`.
-- `docs/adr/` — decisiones de arquitectura del front.
+- `docs/adr/` — decisiones de arquitectura del front (índice en `docs/adr/README.md`, ADR 0001 a 0007).
 - `docs/ONBOARDING.md` — guía del primer día, recorrido del código y problemas frecuentes.
 - `vitest-base.config.mts` — límites de Vitest (timeouts y workers) que usa `npm test`; `eslint.config.js`, `.prettierrc` — calidad de código; `.github/workflows/ci.yml` — CI.
 
