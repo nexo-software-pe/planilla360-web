@@ -47,7 +47,7 @@ Para apuntar a otra API en desarrollo, cambia `apiUrl` en `environment.ts` (no l
 |---|---|
 | `npm start` | Servidor de desarrollo en http://localhost:4200 con recarga (`ng serve`) |
 | `npm run lint` | ESLint (angular-eslint) sobre el proyecto (`ng lint`) |
-| `npm run format` | Da formato con Prettier a `src`, `e2e` y `playwright.config.ts` |
+| `npm run format` | Da formato con Prettier a `src`, `e2e`, `playwright.config.ts` y `vitest-base.config.mts` |
 | `npm run format:check` | Comprueba el formato sin modificar nada (lo exige el CI) |
 | `npm test -- --watch=false` | Pruebas unitarias con Vitest, una sola pasada (`ng test`); sin `--watch=false` queda en modo vigilancia |
 | `npm test -- --watch=false --coverage` | Igual, con cobertura (informe en `coverage/`) |
@@ -107,5 +107,6 @@ El detalle está en [CONTRIBUTING.md](CONTRIBUTING.md#definition-of-done).
 |---|---|
 | [CLAUDE.md](CLAUDE.md) | convenciones, mapa «dónde vive qué» y estado del proyecto |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | flujo de ramas y PR, convenciones y Definition of Done |
+| [docs/ONBOARDING.md](docs/ONBOARDING.md) | primer día, recorrido del código y problemas frecuentes |
 | [docs/adr/](docs/adr/) | decisiones de arquitectura (componentes y sesión, SignalStore y E2E, E2E en el CI) |
 | [README de la API](https://github.com/nexo-software-pe/planilla360-api#readme) | cómo levantar el backend y usuarios de desarrollo |
