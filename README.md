@@ -108,5 +108,5 @@ El detalle está en [CONTRIBUTING.md](CONTRIBUTING.md#definition-of-done).
 | [CLAUDE.md](CLAUDE.md) | convenciones, mapa «dónde vive qué» y estado del proyecto |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | flujo de ramas y PR, convenciones y Definition of Done |
 | [docs/ONBOARDING.md](docs/ONBOARDING.md) | primer día, recorrido del código y problemas frecuentes |
-| [docs/adr/](docs/adr/) | decisiones de arquitectura (componentes y sesión, SignalStore y E2E, E2E en el CI) |
+| [docs/adr/](docs/adr/README.md) | decisiones de arquitectura (índice numerado de los ADR 0001 a 0007) |
 | [README de la API](https://github.com/nexo-software-pe/planilla360-api/blob/staging/README.md) | cómo levantar el backend y usuarios de desarrollo |
