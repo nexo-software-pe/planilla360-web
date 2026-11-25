@@ -9,5 +9,8 @@ export default defineConfig({
     hookTimeout: 30000,
     // Menos workers que núcleos: deja CPU al resto de procesos y evita la saturación.
     maxWorkers: 4,
+    // Marca como lentos (en el reporte) los tests que pasan de 2 s, para seguir viéndolos
+    // aunque el timeout holgado ya no los haga fallar.
+    slowTestThreshold: 2000,
   },
 });
