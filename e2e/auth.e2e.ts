@@ -98,20 +98,27 @@ test.describe('Refresh transparente del token (contra la API real)', () => {
     page,
   }) => {
     await iniciarSesion(page, 'rrhh');
+    // la URL ya es /panel antes de que termine de cargar: se espera a sus indicadores para que no
+    // queden peticiones (ni la recuperación de la sesión) en curso al preparar el escenario
+    await expect(page.getByRole('region', { name: 'Indicadores del personal' })).toBeVisible();
     await page.evaluate(() => localStorage.setItem('planilla360.refresh', 'refresh-invalido'));
 
-    let invalidado = false;
-    await page.route('**/api/v1/empleados?*', async (route) => {
-      if (!invalidado) {
-        invalidado = true;
+    // solo la lista de empleados (páginas de 20) sale con un access token inválido; las consultas
+    // de empleados que hace el panel usan otros tamaños de página
+    await page.route(
+      (url) => url.pathname.endsWith('/api/v1/empleados') && url.searchParams.get('size') === '20',
+      async (route) => {
         await route.continue({
           headers: { ...route.request().headers(), authorization: 'Bearer token-vencido' },
         });
-      } else {
-        await route.continue();
-      }
-    });
+      },
+    );
+
+    const refresh = page.waitForResponse(
+      (r) => r.url().endsWith('/auth/refresh') && r.request().method() === 'POST',
+    );
     await page.getByRole('link', { name: 'Empleados', exact: true }).click();
+    expect((await refresh).status()).toBe(401);
     await expect(page).toHaveURL(/\/login\?returnUrl=%2Fpanel%2Fempleados/);
   });
 });
