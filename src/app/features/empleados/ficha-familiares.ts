@@ -8,9 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { NotificacionService } from '../../core/http/notificacion.service';
 import { EstadoLista } from '../../shared/estado-lista';
 import { FechaPipe } from '../../shared/fecha.pipe';
-import { hoyIso } from '../../shared/fechas';
 import { recurso } from '../../shared/recurso';
-import { mensajeDeError, noFuturaValidator } from '../../shared/validadores';
+import { mensajeDeError } from '../../shared/validadores';
 import { EmpleadosService, FamiliarRequest, Parentesco } from './empleados.service';
 
 const PARENTESCOS: Record<Parentesco, string> = {
@@ -146,7 +145,7 @@ export class FichaFamiliares {
   protected readonly form = this.fb.nonNullable.group({
     nombres: ['', [Validators.required, Validators.maxLength(150)]],
     parentesco: ['HIJO' as Parentesco, Validators.required],
-    fechaNacimiento: ['', [Validators.required, noFuturaValidator(hoyIso)]],
+    fechaNacimiento: ['', Validators.required],
     estudia: [false],
   });
 
