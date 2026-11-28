@@ -50,8 +50,8 @@ import { AsistenciaService } from './asistencia.service';
                     >
                   </td>
                   <td class="cifra">{{ f.diasAsistidos }}</td>
-                  <td class="cifra">{{ f.diasJustificados }}</td>
                   <td class="cifra">{{ f.faltas }}</td>
+                  <td class="cifra">{{ f.diasJustificados }}</td>
                   <td class="cifra">{{ f.tardanzas }}</td>
                   <td class="cifra">{{ minutos(f.minutosTardanza) }}</td>
                   <td class="cifra">{{ minutos(f.minutosExtra) }}</td>

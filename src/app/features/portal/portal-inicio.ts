@@ -186,7 +186,7 @@ export class PortalInicio {
   protected readonly resumen = computed(() => {
     const dias = this.datos.datos()?.mia ?? [];
     return {
-      asistidos: dias.filter((d) => d.estado === 'PRESENTE' || d.estado === 'TARDANZA').length,
+      asistidos: dias.filter((d) => d.estado === 'PRESENTE').length,
       tardanzas: dias.filter((d) => d.estado === 'TARDANZA').length,
       faltas: dias.filter((d) => d.estado === 'FALTA').length,
     };
