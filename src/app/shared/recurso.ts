@@ -1,24 +1,22 @@
 import { DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ApiError } from '../core/http/api-error';
 
 /**
  * Carga de datos de una pantalla con sus tres estados (cargando, error, datos). Debe crearse
- * en un contexto de inyección (campo del componente). `cargar()` cancela la petición anterior.
+ * en un contexto de inyección (campo del componente). `cargar()` vuelve a pedir los datos.
  */
 export function recurso<T>(fuente: () => Observable<T>) {
   const destroyRef = inject(DestroyRef);
   const datos = signal<T | null>(null);
   const cargando = signal(false);
   const error = signal<string | null>(null);
-  let sub: Subscription | undefined;
 
   function cargar(): void {
-    sub?.unsubscribe();
     cargando.set(true);
     error.set(null);
-    sub = fuente()
+    fuente()
       .pipe(takeUntilDestroyed(destroyRef))
       .subscribe({
         next: (d) => {
