@@ -23,7 +23,7 @@ export type Tono = 'exito' | 'advertencia' | 'error' | 'info' | 'neutro';
     }
     .etiqueta--advertencia {
       background: var(--color-advertencia-fondo);
-      color: var(--color-advertencia-texto);
+      color: color-mix(in srgb, var(--color-advertencia-texto) 60%, transparent);
     }
     .etiqueta--error {
       background: var(--color-error-fondo);
