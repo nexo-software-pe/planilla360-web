@@ -51,8 +51,25 @@ async function loginPorPantalla(page: Page, email: string, password: string): Pr
 }
 
 /**
+ * Espera la pantalla de inicio del rol con la sesión ya puesta. La URL sola no basta: ya puede ser
+ * la pedida antes de que la sesión termine de recuperarse. El botón «Cerrar sesión», presente en el
+ * panel y en el portal, solo aparece con la sesión lista.
+ */
+async function esperarPantallaInicial(
+  page: Page,
+  rol: RolPrueba,
+  opciones?: { timeout: number },
+): Promise<void> {
+  await expect(page.getByRole('button', { name: 'Cerrar sesión', exact: true })).toBeVisible(
+    opciones,
+  );
+  await expect(page).toHaveURL(PANTALLA_INICIAL[rol], opciones);
+}
+
+/**
  * Deja la sesión iniciada. Con el usuario de un rol ya usado, retoma su sesión; si no hay (o ya no
- * sirve), inicia sesión por la pantalla de login como lo haría una persona.
+ * sirve), inicia sesión por la pantalla de login como lo haría una persona. Devuelve el control
+ * cuando la pantalla de inicio ya está cargada con la sesión.
  */
 export async function iniciarSesion(
   page: Page,
@@ -73,7 +90,7 @@ export async function iniciarSesion(
     );
     await page.goto(rol === 'empleado' ? '/portal' : '/panel');
     try {
-      await expect(page).toHaveURL(PANTALLA_INICIAL[rol], { timeout: 8000 });
+      await esperarPantallaInicial(page, rol, { timeout: 8000 });
       return;
     } catch {
       // el refresh guardado ya no sirve: se entra con la contraseña
@@ -81,7 +98,7 @@ export async function iniciarSesion(
     }
   }
   await loginPorPantalla(page, email, password);
-  await expect(page).toHaveURL(PANTALLA_INICIAL[rol]);
+  await esperarPantallaInicial(page, rol);
 }
 
 /** Cierra el toast para que no tape botones ni se confunda con el siguiente. */
