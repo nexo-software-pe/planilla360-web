@@ -207,9 +207,6 @@ export class EmpleadosLista {
       this.pagina.set(0);
       this.lista.cargar();
     });
-    this.filtros.controls.areaId.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.filtros.controls.cargoId.setValue(''));
     this.lista.cargar();
   }
 
