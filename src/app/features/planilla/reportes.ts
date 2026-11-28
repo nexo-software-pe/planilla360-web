@@ -78,8 +78,8 @@ import { CostoLaboral, PlanillaService, TipoPlanilla } from './planilla.service'
                       <td>{{ etiquetaArea(c) }}</td>
                       <td>{{ c.cargo || '' }}</td>
                       <td class="cifra">{{ c.trabajadores }}</td>
-                      <td class="cifra">{{ c.ingresos | soles }}</td>
-                      <td class="cifra">{{ c.essalud | soles }}</td>
+                      <td>{{ c.ingresos | soles }}</td>
+                      <td>{{ c.essalud | soles }}</td>
                       <td class="cifra">
                         <strong>{{ c.costoTotal | soles }}</strong>
                       </td>
