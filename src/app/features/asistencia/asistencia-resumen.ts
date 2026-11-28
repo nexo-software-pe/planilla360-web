@@ -43,11 +43,9 @@ import { AsistenciaService } from './asistencia.service';
               @for (f of filas; track f.empleadoId) {
                 <tr>
                   <td>
-                    <a
-                      [routerLink]="['../detalle']"
-                      [queryParams]="{ empleadoId: f.empleadoId, mes: mes() }"
-                      >{{ f.nombreCompleto }}</a
-                    >
+                    <a [routerLink]="['../detalle']" [queryParams]="{ empleadoId: f.empleadoId }">{{
+                      f.nombreCompleto
+                    }}</a>
                   </td>
                   <td class="cifra">{{ f.diasAsistidos }}</td>
                   <td class="cifra">{{ f.faltas }}</td>

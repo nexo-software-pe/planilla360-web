@@ -154,7 +154,7 @@ export const routes: Routes = [
       },
       {
         path: 'auditoria',
-        canActivate: [rolGuard('ADMIN_EMPRESA')],
+        canActivate: [rolGuard(...ROLES_PERSONAL)],
         title: 'Auditoría · Planilla360',
         loadComponent: () => import('./features/admin/auditoria').then((m) => m.Auditoria),
       },
