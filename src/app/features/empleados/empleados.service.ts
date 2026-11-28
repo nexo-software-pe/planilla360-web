@@ -151,9 +151,7 @@ export class EmpleadosService {
   }
 
   cesar(id: string, fechaCese: string): Observable<Empleado> {
-    return this.http
-      .patch<Empleado>(`${this.api}/empleados/${id}/cese`, { fechaCese })
-      .pipe(tap(() => this.olvidarDirectorio()));
+    return this.http.patch<Empleado>(`${this.api}/empleados/${id}/cese`, { fechaCese });
   }
 
   contratos(id: string): Observable<Contrato[]> {
