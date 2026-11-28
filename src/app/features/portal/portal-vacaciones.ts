@@ -201,7 +201,6 @@ export class PortalVacaciones {
       next: () => {
         this.enviando.set(false);
         this.avisos.exito('Solicitud enviada. Tu jefe y RRHH la revisarán.');
-        this.form.reset();
         this.datos.cargar();
       },
       error: () => this.enviando.set(false),
